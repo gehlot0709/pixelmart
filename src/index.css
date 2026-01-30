@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    /* bg-light is likely a custom theme color, we can use hex or recreate theme in v4 css if needed. 
+       For v4, theme Configuration is often CSS based or detected automatically.
+       Since we had custom colors in tailwind.config.js, we should migrate them or stick to v3 compat if user prefers v3. 
+       User said: "don't add post css add tailwind built class".
+       Tailwind v4 uses `@import "tailwindcss";` and CSS variables for theme.
+    */
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Custom Utilities */
+.glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.glass-dark {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Re-adding custom theme variables for v4 compatibility if needed, or directly using hex in components */
+@theme {
+  --color-primary: #6366f1;
+  --color-secondary: #ec4899;
+  --color-dark: #0f172a;
+  --color-light: #f8fafc;
+  --color-accent: #8b5cf6;
+}

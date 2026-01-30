@@ -1,0 +1,116 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { Clock, CheckCircle, XCircle } from 'lucide-react';
+
+const Profile = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        };
+        const { data } = await axios.get(
+          'http://localhost:5000/api/orders/myorders',
+          config
+        );
+        setOrders(data);
+      } catch (error) {
+        console.error(error);
+      }
+      setLoading(false);
+    };
+
+    fetchOrders();
+  }, []);
+
+  if (loading) return <div className="text-center py-20">Loading...</div>;
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+
+      {orders.length === 0 ? (
+        <div className="text-center glass dark:glass-dark p-12 rounded-3xl">
+          <p className="text-xl">You have no orders yet.</p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {orders.map(order => (
+            <motion.div
+              key={order._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass dark:glass-dark p-6 rounded-3xl"
+            >
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-sm font-medium text-slate-500">Order ID: #{order._id}</span>
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${order.isDelivered
+                        ? 'bg-green-100 text-green-700'
+                        : order.isPaid
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}>
+                      {order.isDelivered ? 'Delivered' : order.isPaid ? 'Processing' : 'Pending Verification'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <Clock size={16} />
+                    <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <div className="mt-4 md:mt-0 text-right">
+                  <p className="text-2xl font-bold text-primary">₹{order.totalPrice}</p>
+                  <p className="text-sm text-slate-500">{order.paymentMethod}</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {order.orderItems.map((item, index) => (
+                  <div key={index} className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-slate-800 dark:text-gray-200">{item.name}</h4>
+                      <p className="text-sm text-slate-500">Qty: {item.qty} x ₹{item.price}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
+                <div>
+                  <h5 className="font-bold mb-1">Shipping Address</h5>
+                  <p>{order.shippingAddress.address}, {order.shippingAddress.city}</p>
+                  <p>{order.shippingAddress.postalCode}, {order.shippingAddress.country}</p>
+                  <p>Phone: {order.shippingAddress.phone}</p>
+                </div>
+                <div className="flex flex-col items-start md:items-end gap-2">
+                  {order.isDelivered ? (
+                    <div className="flex items-center gap-2 text-green-600 font-bold">
+                      <CheckCircle size={18} /> Delivered
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-orange-500 font-medium">
+                      <Clock size={18} /> On the way
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Profile;
