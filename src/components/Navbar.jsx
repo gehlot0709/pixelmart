@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
+import API_URL from '../config';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -16,7 +17,7 @@ const Navbar = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
+                const { data } = await axios.get(`${API_URL}/api/categories`);
                 setCategories(data);
             } catch (error) {
                 console.error(error);
