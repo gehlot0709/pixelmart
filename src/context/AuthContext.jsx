@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 const AuthContext = createContext();
 
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
                             Authorization: `Bearer ${token}`
                         }
                     };
-                    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, config);
+                    const { data } = await axios.get(`${API_URL}/api/auth/me`, config);
                     setUser(data);
                     setIsAuthenticated(true);
                 } catch (error) {
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, { email, password });
+        const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password });
         localStorage.setItem('token', data.token);
         setUser(data);
         setIsAuthenticated(true);
@@ -44,14 +45,14 @@ export const AuthProvider = ({ children }) => {
     };
 
     const register = async (userData) => {
-        const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, userData);
+        const { data } = await axios.post(`${API_URL}/api/auth/register`, userData);
         // Note: Register usually doesn't login immediately if OTP is required.
         // But if it returns token (it won't, controller returns message), we handle flow.
         return data;
     };
 
     const verifyOTP = async (email, otp) => {
-        const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/verify-otp`, { email, otp });
+        const { data } = await axios.post(`${API_URL}/api/auth/verify-otp`, { email, otp });
         localStorage.setItem('token', data.token);
         setUser(data);
         setIsAuthenticated(true);
@@ -59,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const resendOTP = async (email) => {
-        const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/resend-otp`, { email });
+        const { data } = await axios.post(`${API_URL}/api/auth/resend-otp`, { email });
         return data;
     };
 

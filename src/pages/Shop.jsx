@@ -3,6 +3,7 @@ import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import { Search } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import API_URL from "../config";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -30,7 +31,7 @@ const Shop = () => {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/categories`,
+          `${API_URL}/api/categories`,
         );
         setCategories(data);
       } catch (error) {
@@ -43,10 +44,10 @@ const Shop = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      console.log("Current API URL:", import.meta.env.VITE_API_URL);
+      console.log("Current API URL:", API_URL);
       setLoading(true);
       try {
-        let url = `${import.meta.env.VITE_API_URL}/api/products?keyword=${keyword}&sort=${sort}`;
+        let url = `${API_URL}/api/products?keyword=${keyword}&sort=${sort}`;
         if (category) url += `&category=${category}`;
         if (isOffersPage) url += `&isOffer=true`; // Filter by Offer
 
