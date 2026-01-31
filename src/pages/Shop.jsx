@@ -30,7 +30,7 @@ const Shop = () => {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/categories",
+          `${import.meta.env.VITE_API_URL}/api/categories`,
         );
         setCategories(data);
       } catch (error) {
@@ -45,7 +45,7 @@ const Shop = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        let url = `http://localhost:5000/api/products?keyword=${keyword}&sort=${sort}`;
+        let url = `${import.meta.env.VITE_API_URL}/api/products?keyword=${keyword}&sort=${sort}`;
         if (category) url += `&category=${category}`;
         if (isOffersPage) url += `&isOffer=true`; // Filter by Offer
 

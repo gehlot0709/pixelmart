@@ -13,7 +13,7 @@ const AdminProductList = () => {
             // Admin gets all products? The public API handles pagination. 
             // We might need an admin endpoint for "all without filter" or just pagination.
             // Using public endpoint for now with large size.
-            const { data } = await axios.get('http://localhost:5000/api/products?pageNumber=1');
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/products?pageNumber=1`);
             // Note: Public API is paginate. Ideally createAdmin specific list.
             setProducts(data.products);
         } catch (error) {
@@ -30,7 +30,7 @@ const AdminProductList = () => {
         if (!window.confirm('Are you sure?')) return;
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-            await axios.delete(`http://localhost:5000/api/products/${id}`, config); // Need to implement DELETE route in Backend! I think I missed Product DELETE logic in Controller.
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}`, config); // Need to implement DELETE route in Backend! I think I missed Product DELETE logic in Controller.
             // Wait, I did check `productController`. Let's check.
             // Ah, `productController` had `createProduct` but did I add `deleteProduct`?
             // Step 101: `createProduct` yes. `deleteProduct`? No.

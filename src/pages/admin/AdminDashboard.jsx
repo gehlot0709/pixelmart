@@ -11,7 +11,7 @@ const AdminDashboard = () => {
         const fetchStats = async () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-                const { data } = await axios.get('http://localhost:5000/api/orders/stats/sales', config);
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/orders/stats/sales`, config);
                 setStats(data);
             } catch (error) {
                 console.error(error);

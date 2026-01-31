@@ -21,7 +21,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/products/${id}`);
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
                 setProduct(data);
                 setMainImage(data.images[0]);
                 if (data.sizes?.length > 0) setSelectedSize(data.sizes[0]);

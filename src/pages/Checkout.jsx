@@ -44,7 +44,7 @@ const Checkout = () => {
                 },
             };
 
-            const { data } = await axios.post('http://localhost:5000/api/upload', formData, config);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData, config);
             setPaymentProof(data);
             setUploading(false);
         } catch (error) {
@@ -90,7 +90,7 @@ const Checkout = () => {
                 paymentProof: paymentMethod === 'QR Code' ? paymentProof : null
             };
 
-            await axios.post('http://localhost:5000/api/orders', orderData, config);
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, orderData, config);
 
             clearCart();
             alert('Order Placed Successfully!');

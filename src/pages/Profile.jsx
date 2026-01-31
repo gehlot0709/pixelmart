@@ -16,7 +16,7 @@ const Profile = () => {
           },
         };
         const { data } = await axios.get(
-          'http://localhost:5000/api/orders/myorders',
+          `${import.meta.env.VITE_API_URL}/api/orders/myorders`,
           config
         );
         setOrders(data);
@@ -53,10 +53,10 @@ const Profile = () => {
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-sm font-medium text-slate-500">Order ID: #{order._id}</span>
                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${order.isDelivered
-                        ? 'bg-green-100 text-green-700'
-                        : order.isPaid
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-yellow-100 text-yellow-700'
+                      ? 'bg-green-100 text-green-700'
+                      : order.isPaid
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-yellow-100 text-yellow-700'
                       }`}>
                       {order.isDelivered ? 'Delivered' : order.isPaid ? 'Processing' : 'Pending Verification'}
                     </span>

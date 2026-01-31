@@ -37,7 +37,7 @@ const AdminProductEdit = () => {
 
     useEffect(() => {
         const fetchCats = async () => {
-            const { data } = await axios.get('http://localhost:5000/api/categories');
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
             setCategories(data);
             if (data.length > 0 && !category && !isEdit) setCategory(data[0]._id);
         };
@@ -47,7 +47,7 @@ const AdminProductEdit = () => {
     useEffect(() => {
         if (isEdit) {
             const fetchProduct = async () => {
-                const { data } = await axios.get(`http://localhost:5000/api/products/${id}`);
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
                 setTitle(data.title);
                 setPrice(data.price);
                 setDescription(data.description);
@@ -113,7 +113,7 @@ const AdminProductEdit = () => {
             if (isEdit) {
                 alert("Update logic pending backend implementation. Please add new product for now.");
             } else {
-                await axios.post('http://localhost:5000/api/products', formData, config);
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, formData, config);
                 navigate('/admin/products');
             }
         } catch (error) {
@@ -201,8 +201,8 @@ const AdminProductEdit = () => {
                                                 }
                                             }}
                                             className={`px-3 py-1 rounded-lg border text-sm transition-all ${sizes.split(',').includes(size)
-                                                    ? 'bg-primary text-white border-primary'
-                                                    : 'bg-white border-slate-200 hover:border-primary text-slate-600'
+                                                ? 'bg-primary text-white border-primary'
+                                                : 'bg-white border-slate-200 hover:border-primary text-slate-600'
                                                 }`}
                                         >
                                             {size}
@@ -227,8 +227,8 @@ const AdminProductEdit = () => {
                                                 }
                                             }}
                                             className={`px-3 py-1 rounded-lg border text-sm transition-all ${sizes.split(',').includes(size)
-                                                    ? 'bg-primary text-white border-primary'
-                                                    : 'bg-white border-slate-200 hover:border-primary text-slate-600'
+                                                ? 'bg-primary text-white border-primary'
+                                                : 'bg-white border-slate-200 hover:border-primary text-slate-600'
                                                 }`}
                                         >
                                             {size}
