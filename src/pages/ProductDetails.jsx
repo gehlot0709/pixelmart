@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import API_URL from '../config';
 import { useCart } from '../context/CartContext';
 
 import { motion } from 'framer-motion';
@@ -21,7 +22,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
+                const { data } = await axios.get(`${API_URL}/api/products/${id}`);
                 setProduct(data);
                 setMainImage(data.images[0]);
                 if (data.sizes?.length > 0) setSelectedSize(data.sizes[0]);

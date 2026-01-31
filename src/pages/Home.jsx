@@ -5,6 +5,7 @@ import { ShoppingBag, ArrowRight, Truck, ShieldCheck, Zap } from 'lucide-react';
 import Button from '../components/Button';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 const Home = () => {
     const [categories, setCategories] = useState([]);
@@ -12,7 +13,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
+                const { data } = await axios.get(`${API_URL}/api/categories`);
                 setCategories(data);
             } catch (error) {
                 console.error(error);
