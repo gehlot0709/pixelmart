@@ -43,6 +43,7 @@ const Shop = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      console.log("Current API URL:", import.meta.env.VITE_API_URL);
       setLoading(true);
       try {
         let url = `${import.meta.env.VITE_API_URL}/api/products?keyword=${keyword}&sort=${sort}`;
@@ -99,22 +100,22 @@ const Shop = () => {
                     {/* Sidebar Subcategories (Always visible if Parent is selected, or we can toggle) */}
                     {(category === parent._id ||
                       categories.find((c) => c._id === category)?.parent ===
-                        parent._id) && (
-                      <ul className="ml-4 mt-2 space-y-1 border-l-2 border-slate-100 pl-2">
-                        {categories
-                          .filter((c) => c.parent === parent._id)
-                          .map((sub) => (
-                            <li key={sub._id}>
-                              <button
-                                onClick={() => setCategory(sub._id)}
-                                className={`w-full text-left py-1 text-sm rounded transition-colors ${category === sub._id ? "text-primary font-bold" : "text-slate-500 hover:text-primary"}`}
-                              >
-                                {sub.name}
-                              </button>
-                            </li>
-                          ))}
-                      </ul>
-                    )}
+                      parent._id) && (
+                        <ul className="ml-4 mt-2 space-y-1 border-l-2 border-slate-100 pl-2">
+                          {categories
+                            .filter((c) => c.parent === parent._id)
+                            .map((sub) => (
+                              <li key={sub._id}>
+                                <button
+                                  onClick={() => setCategory(sub._id)}
+                                  className={`w-full text-left py-1 text-sm rounded transition-colors ${category === sub._id ? "text-primary font-bold" : "text-slate-500 hover:text-primary"}`}
+                                >
+                                  {sub.name}
+                                </button>
+                              </li>
+                            ))}
+                        </ul>
+                      )}
                   </li>
                 ))}
             </ul>
