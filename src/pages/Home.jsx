@@ -1,14 +1,17 @@
 
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, ArrowRight, Truck, ShieldCheck, Zap } from 'lucide-react';
+import { ShoppingBag, ArrowRight, Truck, ShieldCheck, Zap, Sparkles } from 'lucide-react';
 import Button from '../components/Button';
+import ProductCard from '../components/ProductCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
 
 const Home = () => {
     const [categories, setCategories] = useState([]);
+    const [offerProducts, setOfferProducts] = useState([]);
+    const [loadingOffers, setLoadingOffers] = useState(true);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -19,7 +22,20 @@ const Home = () => {
                 console.error(error);
             }
         };
+
+        const fetchOffers = async () => {
+            setLoadingOffers(true);
+            try {
+                const { data } = await axios.get(`${API_URL}/api/products?isOffer=true&limit=4`);
+                setOfferProducts(data.products || []);
+            } catch (error) {
+                console.error("Error fetching offers:", error);
+            }
+            setLoadingOffers(false);
+        };
+
         fetchCategories();
+        fetchOffers();
     }, []);
 
     return (
@@ -98,6 +114,43 @@ const Home = () => {
                     ))}
                 </div>
             </section>
+
+            {/* Exclusive Offers Section */}
+            {offerProducts.length > 0 && (
+                <section className="py-24 container mx-auto px-6">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                        <div className="max-w-xl">
+                            <div className="flex items-center gap-2 mb-4">
+                                <span className="px-4 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-black uppercase tracking-widest flex items-center gap-2 ring-1 ring-secondary/20">
+                                    <Sparkles size={12} /> Limited Time Deals
+                                </span>
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-800 dark:text-white">
+                                Exclusive <span className="text-primary italic">Infinity</span> Offers
+                            </h2>
+                        </div>
+                        <Link to="/offers">
+                            <button className="group flex items-center gap-3 font-black text-sm uppercase tracking-widest text-primary hover:gap-5 transition-all">
+                                Explore All Offers <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {offerProducts.map((product, idx) => (
+                            <motion.div
+                                key={product._id}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                            >
+                                <ProductCard product={product} />
+                            </motion.div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* Categories */}
             <section className="py-20 container mx-auto px-6">
