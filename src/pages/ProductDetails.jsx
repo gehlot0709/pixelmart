@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_URL from '../config';
 import { useCart } from '../context/CartContext';
 
 import { motion } from 'framer-motion';
 import Button from '../components/Button';
-import { Star, ShoppingCart, Truck, ShieldCheck } from 'lucide-react';
+import { Star, ShoppingCart, Truck, ShieldCheck, RotateCcw, Wallet, Zap } from 'lucide-react';
 
 const ProductDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [mainImage, setMainImage] = useState('');
@@ -37,7 +38,12 @@ const ProductDetails = () => {
 
     const handleAddToCart = () => {
         addToCart(product, qty, selectedSize, selectedColor);
-        alert('Added to cart!'); // Replace with Toast later
+        alert('Added to cart!');
+    };
+
+    const handleBuyNow = () => {
+        addToCart(product, qty, selectedSize, selectedColor);
+        navigate('/checkout');
     };
 
     if (loading) return <div className="text-center py-20">Loading...</div>;
@@ -135,10 +141,10 @@ const ProductDetails = () => {
                     )}
                 </div>
 
-                <div className="flex items-center space-x-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <div className="flex items-center border border-slate-300 rounded-xl">
+                <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center border border-slate-300 rounded-xl w-full sm:w-auto">
                         <button onClick={() => setQty(q => Math.max(1, q - 1))} className="px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-l-xl">-</button>
-                        <span className="px-4 font-bold">{qty}</span>
+                        <span className="px-4 font-bold flex-1 text-center">{qty}</span>
                         <button
                             onClick={() => {
                                 if (qty >= product.stock) {
@@ -152,13 +158,48 @@ const ProductDetails = () => {
                             +
                         </button>
                     </div>
-                    <Button onClick={handleAddToCart} disabled={product.stock <= 0} className="flex-1">
-                        <ShoppingCart className="mr-2" size={20} /> Add to Cart
-                    </Button>
+                    <div className="flex flex-1 gap-2 w-full">
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={product.stock <= 0}
+                            className="flex-1 px-6 py-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white font-bold flex items-center justify-center hover:bg-slate-200 transition"
+                        >
+                            <ShoppingCart className="mr-2" size={20} /> Add to Cart
+                        </button>
+                        <Button
+                            onClick={handleBuyNow}
+                            disabled={product.stock <= 0}
+                            className="flex-1 py-4"
+                        >
+                            <Zap className="mr-2" size={20} /> Buy Now
+                        </Button>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-sm text-slate-500">
-                    <div className="flex items-center"><Truck className="mr-2 text-primary" size={18} /> {product.deliveryTime}</div>
+                {/* Trust Badges */}
+                <div className="grid grid-cols-3 gap-4 pt-10 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex flex-col items-center text-center">
+                        <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 mb-2">
+                            <RotateCcw size={24} />
+                        </div>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">10-Day Return</span>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                        <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 mb-2">
+                            <Wallet size={24} />
+                        </div>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Cash on Delivery</span>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                        <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 mb-2">
+                            <ShieldCheck size={24} />
+                        </div>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">PixelMart Assured</span>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 text-sm text-slate-500 pt-6">
+                    <div className="flex items-center"><Truck className="mr-2 text-primary" size={18} /> {product.deliveryTime} Delivery</div>
                     <div className="flex items-center"><ShieldCheck className="mr-2 text-primary" size={18} /> Secure Transaction</div>
                 </div>
             </div>
