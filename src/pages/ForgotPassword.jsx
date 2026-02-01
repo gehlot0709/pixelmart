@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import API_URL from '../config';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');

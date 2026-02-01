@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Clock, CheckCircle, XCircle, Key } from 'lucide-react';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import API_URL from '../config';
 
 const Profile = () => {
   const [orders, setOrders] = useState([]);
@@ -35,6 +36,7 @@ const Profile = () => {
       const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
       await axios.put(`${import.meta.env.VITE_API_URL}/api/auth/change-password`, { currentPassword, newPassword }, config);
       setPassMessage('Password changed successfully');
+      alert('Password changed successfully');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
