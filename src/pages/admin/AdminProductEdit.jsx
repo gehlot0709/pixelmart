@@ -33,6 +33,7 @@ const AdminProductEdit = () => {
     const [deliveryTime, setDeliveryTime] = useState('3-5 Business Days');
     const [isOffer, setIsOffer] = useState(false);
     const [images, setImages] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const [categories, setCategories] = useState([]);
 
@@ -90,6 +91,12 @@ const AdminProductEdit = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+
+        if (!isEdit && (!images || images.length === 0)) {
+            return alert("Please select at least one product image");
+        }
+
+        setLoading(true);
         const formData = new FormData();
         formData.append('title', title);
         formData.append('price', price);
@@ -118,13 +125,17 @@ const AdminProductEdit = () => {
             };
 
             if (isEdit) {
-                alert("Update logic pending backend implementation. Please add new product for now.");
+                await axios.put(`${API_URL}/api/products/${id}`, formData, config);
+                navigate('/admin/products');
             } else {
                 await axios.post(`${API_URL}/api/products`, formData, config);
                 navigate('/admin/products');
             }
         } catch (error) {
-            alert('Error Saving Product');
+            console.error("Save Error:", error);
+            alert('Error Saving Product: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -326,7 +337,9 @@ const AdminProductEdit = () => {
                     />
                 </div>
 
-                <Button type="submit" className="w-full">Save Product</Button>
+                <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? 'Saving...' : 'Save Product'}
+                </Button>
             </form>
         </div>
     );
