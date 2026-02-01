@@ -56,7 +56,7 @@ const ProductDetails = () => {
                             className={`w-full aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${mainImage === img ? 'border-primary ring-2 ring-primary/30' : 'border-transparent hover:border-slate-300'
                                 }`}
                         >
-                            <img src={img} alt="" className="w-full h-full object-cover" />
+                            <img src={img.startsWith('http') ? img : `${API_URL}${img}`} alt="" className="w-full h-full object-cover" />
                         </div>
                     ))}
                 </div>
@@ -68,7 +68,7 @@ const ProductDetails = () => {
                     animate={{ opacity: 1 }}
                     className="flex-1 rounded-3xl overflow-hidden glass dark:glass-dark p-4 flex items-center justify-center bg-white relative"
                 >
-                    <img src={mainImage} alt={product.title} className="max-h-full max-w-full object-contain" />
+                    <img src={mainImage.startsWith('http') ? mainImage : `${API_URL}${mainImage}`} alt={product.title} className="max-h-full max-w-full object-contain" />
                 </motion.div>
             </div>
 

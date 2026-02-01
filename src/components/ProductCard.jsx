@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Star, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import API_URL from '../config';
 
 const ProductCard = ({ product }) => {
     return (
@@ -12,7 +13,9 @@ const ProductCard = ({ product }) => {
             <Link to={`/product/${product._id}`}>
                 <div className="h-64 overflow-hidden relative bg-white">
                     <img
-                        src={product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/300'}
+                        src={product.images && product.images[0]
+                            ? (product.images[0].startsWith('http') ? product.images[0] : `${API_URL}${product.images[0]}`)
+                            : 'https://via.placeholder.com/300'}
                         alt={product.title}
                         className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
                     />
