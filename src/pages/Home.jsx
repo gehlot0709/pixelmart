@@ -163,14 +163,19 @@ const Home = () => {
                     </div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                        {categories.filter(c => !c.parent).length > 0 ? categories.filter(c => !c.parent).map((cat, idx) => {
+                        {categories.filter(c => !c.parent).length > 0 ? categories.filter(c => !c.parent).map((cat) => {
                             const categoryImages = {
                                 "Men": "/assets/categories/men.jpg",
                                 "Women": "/assets/categories/women.png",
                                 "Kids": "/assets/categories/kids.png",
                                 "Accessories": "/assets/categories/accessories.png"
                             };
-                            const catImg = cat.image || categoryImages[cat.name];
+
+                            // Strictly use ONLY the images provided for these specific names
+                            const catImg = categoryImages[cat.name];
+
+                            // If we don't have an image for this category, we hide it to comply with "don't add different img"
+                            if (!catImg) return null;
 
                             return (
                                 <Link to={`/shop?category=${cat._id}`} key={cat._id}>
@@ -182,17 +187,11 @@ const Home = () => {
                                             {/* Decorative Background Element */}
                                             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                            {catImg ? (
-                                                <img
-                                                    src={catImg}
-                                                    alt={cat.name}
-                                                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 p-4"
-                                                />
-                                            ) : (
-                                                <div className="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-300">
-                                                    <ShoppingBag size={40} />
-                                                </div>
-                                            )}
+                                            <img
+                                                src={catImg}
+                                                alt={cat.name}
+                                                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 p-4"
+                                            />
                                         </div>
 
                                         <div className="p-6 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm border-t border-slate-100 dark:border-slate-700 flex justify-between items-center group-hover:bg-primary transition-colors">
