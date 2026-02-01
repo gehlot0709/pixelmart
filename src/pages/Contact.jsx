@@ -84,7 +84,7 @@ const Contact = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            placeholder="your@email.com"
+                            placeholder=""
                         />
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">Message</label>
@@ -94,7 +94,7 @@ const Contact = () => {
                                 className="w-full p-4 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
                                 rows="5"
                                 required
-                                placeholder="How can we help you?"
+                                placeholder=""
                             ></textarea>
                         </div>
                         <Button type="submit" disabled={sending} className="w-full">

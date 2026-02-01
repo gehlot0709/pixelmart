@@ -111,7 +111,7 @@ const ForgotPassword = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            placeholder="email@example.com"
+                            placeholder=""
                         />
                         <Button type="submit" className="w-full" disabled={loading}>
                             {loading ? 'Sending OTP...' : 'Send OTP'}
@@ -127,7 +127,7 @@ const ForgotPassword = () => {
                             value={otp}
                             onChange={(e) => setOtp(e.target.value)}
                             required
-                            placeholder="123456"
+                            placeholder=""
                         />
                         <Input
                             label="New Password"
@@ -135,7 +135,7 @@ const ForgotPassword = () => {
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             required
-                            placeholder="******"
+                            placeholder=""
                         />
                         <Input
                             label="Confirm New Password"
@@ -143,7 +143,7 @@ const ForgotPassword = () => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
-                            placeholder="******"
+                            placeholder=""
                         />
                         <Button type="submit" className="w-full" disabled={loading}>
                             {loading ? 'Resetting...' : 'Reset Password'}

@@ -102,8 +102,8 @@ const Checkout = () => {
             alert('Order Placed Successfully!');
             navigate('/profile');
         } catch (error) {
-            console.error(error);
-            setError(error.response?.data?.message || 'Order Failed');
+            console.error("Order Submission Failure:", error.response?.data || error.message);
+            setError(error.response?.data?.error || error.response?.data?.message || 'Order Failed');
         } finally {
             setIsProcessing(false);
         }
@@ -124,28 +124,28 @@ const Checkout = () => {
                 <form onSubmit={submitHandler} id="checkout-form" className="space-y-4">
                     {/* New Fields */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} required placeholder="John Doe" />
-                        <Input label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="john@example.com" />
+                        <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} required placeholder="" />
+                        <Input label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Input label="Home Number" value={houseNumber} onChange={(e) => setHouseNumber(e.target.value)} required placeholder="A-101" />
-                        <Input label="Flat/Society Name" value={flatSociety} onChange={(e) => setFlatSociety(e.target.value)} required placeholder="Galaxy Apartments" />
+                        <Input label="Home Number" value={houseNumber} onChange={(e) => setHouseNumber(e.target.value)} required placeholder="" />
+                        <Input label="Flat/Society Name" value={flatSociety} onChange={(e) => setFlatSociety(e.target.value)} required placeholder="" />
                     </div>
 
-                    <Input label="Street Address / Area" value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="MG Road, Near Park" />
+                    <Input label="Street Address / Area" value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="" />
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} required placeholder="Mumbai" />
-                        <Input label="State" value={state} onChange={(e) => setState(e.target.value)} required placeholder="Maharashtra" />
+                        <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} required placeholder="" />
+                        <Input label="State" value={state} onChange={(e) => setState(e.target.value)} required placeholder="" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Input label="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required placeholder="400001" />
-                        <Input label="Country" value={country} onChange={(e) => setCountry(e.target.value)} required placeholder="India" />
+                        <Input label="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required placeholder="" />
+                        <Input label="Country" value={country} onChange={(e) => setCountry(e.target.value)} required placeholder="" />
                     </div>
 
-                    <Input label="Contact Number" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+91 9876543210" />
+                    <Input label="Contact Number" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="" />
                 </form>
             </motion.div>
 

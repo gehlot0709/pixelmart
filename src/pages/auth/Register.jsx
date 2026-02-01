@@ -87,9 +87,9 @@ const Register = () => {
                             {error && <div className="bg-red-100 text-red-600 p-3 rounded-lg mb-4 text-center text-sm">{error}</div>}
 
                             <form onSubmit={handleRegister}>
-                                <Input label="Full Name" name="name" type="text" value={formData.name} onChange={handleChange} icon={User} required placeholder="John Doe" />
-                                <Input label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} icon={Mail} required placeholder="john@example.com" />
-                                <Input label="Password" name="password" type="password" value={formData.password} onChange={handleChange} icon={Lock} required placeholder="••••••••" />
+                                <Input label="Full Name" name="name" type="text" value={formData.name} onChange={handleChange} icon={User} required placeholder="" />
+                                <Input label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} icon={Mail} required placeholder="" />
+                                <Input label="Password" name="password" type="password" value={formData.password} onChange={handleChange} icon={Lock} required placeholder="" />
 
                                 <Button type="submit" className="w-full mt-4" disabled={loading}>
                                     {loading ? 'Sending OTP...' : 'Get OTP'}

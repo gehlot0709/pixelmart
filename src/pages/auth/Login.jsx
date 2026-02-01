@@ -48,7 +48,7 @@ const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         icon={Mail}
-                        placeholder="john@example.com"
+                        placeholder=""
                         required
                     />
                     <Input
@@ -57,7 +57,7 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         icon={Lock}
-                        placeholder="••••••••"
+                        placeholder=""
                         required
                     />
 
