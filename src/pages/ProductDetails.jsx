@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 
 import { motion } from 'framer-motion';
 import Button from '../components/Button';
-import { Star, ShoppingCart, Truck, ShieldCheck, RotateCcw, Wallet, Zap } from 'lucide-react';
+import { Star, ShoppingCart, Truck, ShieldCheck, RotateCcw, Wallet, Zap, ChevronDown } from 'lucide-react';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -100,9 +100,113 @@ const ProductDetails = () => {
                     {product.salePrice > 0 && <span className="text-slate-400 line-through text-lg ml-3">₹{product.price}</span>}
                 </div>
 
-                <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
-                    {product.description}
-                </p>
+                {/* Structured Description Parsing */}
+                {(() => {
+                    const parseDescription = (desc) => {
+                        if (!desc) return { highlights: [], details: [], remaining: '' };
+
+                        const details = [];
+                        const highlights = [];
+                        let remaining = desc;
+
+                        // Improved Regex to capture Attribute: Value patterns
+                        // Look for phrases like "Material: Cotton" or "Net Quantity (N): 1"
+                        const attributeRegex = /([A-Za-z\s\(\)]+):\s*([^:]+?)(?=\s+[A-Z][a-z\s\(\)]+\:|\r?\n|$)/g;
+                        let match;
+                        const matchedKeys = [];
+
+                        while ((match = attributeRegex.exec(desc)) !== null) {
+                            const key = match[1].trim();
+                            const value = match[2].trim();
+                            if (key && value && key.length < 50 && value.length < 150) {
+                                details.push({ key, value });
+                                matchedKeys.push(match[0]);
+                            }
+                        }
+
+                        // Remove matched details from remaining text to find description/highlights
+                        matchedKeys.forEach(k => {
+                            remaining = remaining.replace(k, '');
+                        });
+
+                        // Extract Checkmark highlights
+                        const highlightRegex = /✓\s*([^✓\n]+)/g;
+                        while ((match = highlightRegex.exec(desc)) !== null) {
+                            highlights.push(match[1].trim());
+                        }
+
+                        // Clean up remaining text
+                        remaining = remaining.replace(/✓\s*[^✓\n]+/g, '').trim();
+
+                        return { highlights, details, remaining };
+                    };
+
+                    const { highlights, details, remaining } = parseDescription(product.description);
+
+                    return (
+                        <div className="space-y-8">
+                            {/* Product Highlights Grid */}
+                            {details.length > 0 && (
+                                <div>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className="text-xl font-bold text-slate-800 dark:text-white">Product Highlights</h3>
+                                        <button className="text-primary text-xs font-bold uppercase tracking-widest hover:underline">Copy</button>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+                                        {details.slice(0, 4).map((detail, idx) => (
+                                            <div key={idx} className="flex flex-col">
+                                                <span className="text-slate-500 text-xs font-medium uppercase tracking-tight">{detail.key}</span>
+                                                <span className="text-slate-900 dark:text-slate-200 font-semibold">{detail.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Additional Details Accordion-style or List */}
+                            {details.length > 4 && (
+                                <div className="border-t border-slate-100 dark:border-slate-800 pt-6">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className="text-lg font-bold text-slate-800 dark:text-white">Additional Details</h3>
+                                        <ChevronDown size={20} className="text-slate-400" />
+                                    </div>
+                                    <div className="space-y-3">
+                                        {details.slice(4).map((detail, idx) => (
+                                            <div key={idx} className="flex justify-between items-start py-1">
+                                                <span className="text-slate-500 text-sm font-medium w-1/2">{detail.key}</span>
+                                                <span className="text-slate-800 dark:text-slate-300 text-sm font-semibold w-1/2">{detail.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Full Description / More Info */}
+                            {remaining && (
+                                <div className="border-t border-slate-100 dark:border-slate-800 pt-6">
+                                    <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-3">More Information</h3>
+                                    <p className="text-slate-600 dark:text-gray-400 leading-relaxed text-sm">
+                                        {remaining}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Bullet Highlights */}
+                            {highlights.length > 0 && (
+                                <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl">
+                                    <ul className="space-y-2">
+                                        {highlights.map((h, i) => (
+                                            <li key={i} className="flex items-start text-sm text-slate-600 dark:text-slate-400">
+                                                <span className="text-green-500 mr-2">✓</span>
+                                                {h}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })()}
 
                 {/* Options */}
                 <div className="space-y-4">
