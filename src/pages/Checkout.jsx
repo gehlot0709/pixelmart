@@ -96,6 +96,7 @@ const Checkout = () => {
                 paymentProof: paymentMethod === 'QR Code' ? paymentProof : null
             };
 
+            console.log("Submitting Order Data:", orderData);
             await axios.post(`${API_URL}/api/orders`, orderData, config);
 
             clearCart();
