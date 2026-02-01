@@ -133,7 +133,9 @@ const AdminProductEdit = () => {
             }
         } catch (error) {
             console.error("Save Error:", error);
-            alert('Error Saving Product: ' + (error.response?.data?.message || error.message));
+            const message = error.response?.data?.message || error.message;
+            const details = error.response?.data?.errors ? `\n- ${error.response.data.errors.join('\n- ')}` : '';
+            alert(`Error Saving Product: ${message}${details}`);
         } finally {
             setLoading(false);
         }
