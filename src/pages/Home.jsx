@@ -153,61 +153,56 @@ const Home = () => {
             )}
 
             {/* Categories */}
-            <section className="py-24 bg-slate-50/50 dark:bg-slate-900/30">
-                <div className="container mx-auto px-6">
-                    <div className="flex flex-col mb-16">
-                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-800 dark:text-white mb-4">
+            <section className="py-24 bg-white dark:bg-slate-900">
+                <div className="container mx-auto px-6 text-center">
+                    <div className="flex flex-col items-center mb-16">
+                        <span className="text-primary font-black uppercase tracking-[0.3em] text-xs mb-4">Discover</span>
+                        <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-800 dark:text-white">
                             Featured <span className="text-primary italic">Collections</span>
                         </h2>
-                        <p className="text-slate-500 text-lg">Browse our meticulously curated categories for your perfect style.</p>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="flex flex-wrap justify-center gap-10 md:gap-16">
                         {categories.filter(c => !c.parent).length > 0 ? categories.filter(c => !c.parent).map((cat) => {
                             const categoryImages = {
-                                "Men": "/assets/categories/men.jpg",
+                                "Men": "/assets/categories/men.png",
                                 "Women": "/assets/categories/women.png",
                                 "Kids": "/assets/categories/kids.png",
                                 "Accessories": "/assets/categories/accessories.png"
                             };
 
-                            // Strictly use ONLY the images provided for these specific names
                             const catImg = categoryImages[cat.name];
-
-                            // If we don't have an image for this category, we hide it to comply with "don't add different img"
                             if (!catImg) return null;
 
                             return (
-                                <Link to={`/shop?category=${cat._id}`} key={cat._id}>
-                                    <motion.div
-                                        whileHover={{ y: -10 }}
-                                        className="group relative h-80 rounded-[2.5rem] bg-white dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col transition-all hover:border-primary/20"
-                                    >
-                                        <div className="flex-grow p-8 flex items-center justify-center relative overflow-hidden">
-                                            {/* Decorative Background Element */}
-                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                <Link to={`/shop?category=${cat._id}`} key={cat._id} className="group">
+                                    <div className="flex flex-col items-center">
+                                        <motion.div
+                                            whileHover={{ y: -10 }}
+                                            className="relative w-40 h-40 md:w-56 md:h-56 rounded-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 shadow-xl flex items-center justify-center p-6 mb-8 group-hover:border-primary/30 transition-all duration-500 overflow-hidden"
+                                        >
+                                            {/* Subtle Glow */}
+                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                                             <img
                                                 src={catImg}
                                                 alt={cat.name}
-                                                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 p-4"
+                                                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
                                             />
-                                        </div>
+                                        </motion.div>
 
-                                        <div className="p-6 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm border-t border-slate-100 dark:border-slate-700 flex justify-between items-center group-hover:bg-primary transition-colors">
-                                            <span className="font-black text-xl tracking-tight text-slate-800 dark:text-white group-hover:text-white">
+                                        <div className="flex flex-col items-center">
+                                            <span className="text-xl md:text-2xl font-black text-slate-800 dark:text-white tracking-tight group-hover:text-primary transition-colors">
                                                 {cat.name}
                                             </span>
-                                            <div className="p-2 rounded-xl bg-white dark:bg-slate-700 text-slate-400 group-hover:text-primary shadow-sm group-hover:scale-110 transition-all">
-                                                <ArrowRight size={18} />
-                                            </div>
+                                            <div className="mt-2 w-0 group-hover:w-8 h-1 bg-primary transition-all duration-500 rounded-full" />
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 </Link>
                             );
                         }) : (
-                            <div className="col-span-full py-20 flex justify-center animate-pulse">
-                                <p className="text-slate-400 font-bold tracking-widest uppercase italic">Initializing Collections...</p>
+                            <div className="w-full py-20 flex justify-center animate-pulse">
+                                <p className="text-slate-400 font-bold tracking-widest uppercase italic">Preparing Collections...</p>
                             </div>
                         )}
                     </div>
