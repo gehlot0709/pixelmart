@@ -4,9 +4,16 @@ import { Link } from 'react-router-dom';
 import { ShoppingBag, ArrowRight, Truck, ShieldCheck, Zap, Sparkles } from 'lucide-react';
 import Button from '../components/Button';
 import ProductCard from '../components/ProductCard';
+
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
+
+// Import category images
+import menImg from '../assets/categories/men.png';
+import womenImg from '../assets/categories/women.png';
+import kidsImg from '../assets/categories/kids.png';
+import accessoriesImg from '../assets/categories/accessories.png';
 
 const Home = () => {
     const [categories, setCategories] = useState([]);
@@ -165,10 +172,10 @@ const Home = () => {
                     <div className="flex flex-wrap justify-center gap-10 md:gap-16">
                         {categories.filter(c => !c.parent).length > 0 ? categories.filter(c => !c.parent).map((cat) => {
                             const categoryImages = {
-                                "Men": "/assets/categories/men.png",
-                                "Women": "/assets/categories/women.png",
-                                "Kids": "/assets/categories/kids.png",
-                                "Accessories": "/assets/categories/accessories.png"
+                                "Men": menImg,
+                                "Women": womenImg,
+                                "Kids": kidsImg,
+                                "Accessories": accessoriesImg
                             };
 
                             const catImg = categoryImages[cat.name];
