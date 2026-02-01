@@ -153,21 +153,65 @@ const Home = () => {
             )}
 
             {/* Categories */}
-            <section className="py-20 container mx-auto px-6">
-                <h2 className="text-3xl font-bold mb-12">Featured Categories</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {categories.filter(c => !c.parent).length > 0 ? categories.filter(c => !c.parent).map((cat, idx) => (
-                        <Link to={`/shop?category=${cat._id}`} key={idx}>
-                            <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                className="h-40 rounded-3xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center font-bold text-xl text-slate-800 shadow-sm"
-                            >
-                                {cat.name}
-                            </motion.div>
-                        </Link>
-                    )) : (
-                        <p>Loading Categories...</p>
-                    )}
+            <section className="py-24 bg-slate-50/50 dark:bg-slate-900/30">
+                <div className="container mx-auto px-6">
+                    <div className="flex flex-col mb-16">
+                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-800 dark:text-white mb-4">
+                            Featured <span className="text-primary italic">Collections</span>
+                        </h2>
+                        <p className="text-slate-500 text-lg">Browse our meticulously curated categories for your perfect style.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                        {categories.filter(c => !c.parent).length > 0 ? categories.filter(c => !c.parent).map((cat, idx) => {
+                            const categoryImages = {
+                                "Men": "/assets/categories/men.jpg",
+                                "Women": "/assets/categories/women.png",
+                                "Kids": "/assets/categories/kids.png",
+                                "Accessories": "/assets/categories/accessories.png"
+                            };
+                            const catImg = cat.image || categoryImages[cat.name];
+
+                            return (
+                                <Link to={`/shop?category=${cat._id}`} key={cat._id}>
+                                    <motion.div
+                                        whileHover={{ y: -10 }}
+                                        className="group relative h-80 rounded-[2.5rem] bg-white dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col transition-all hover:border-primary/20"
+                                    >
+                                        <div className="flex-grow p-8 flex items-center justify-center relative overflow-hidden">
+                                            {/* Decorative Background Element */}
+                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                            {catImg ? (
+                                                <img
+                                                    src={catImg}
+                                                    alt={cat.name}
+                                                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 p-4"
+                                                />
+                                            ) : (
+                                                <div className="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-300">
+                                                    <ShoppingBag size={40} />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="p-6 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm border-t border-slate-100 dark:border-slate-700 flex justify-between items-center group-hover:bg-primary transition-colors">
+                                            <span className="font-black text-xl tracking-tight text-slate-800 dark:text-white group-hover:text-white">
+                                                {cat.name}
+                                            </span>
+                                            <div className="p-2 rounded-xl bg-white dark:bg-slate-700 text-slate-400 group-hover:text-primary shadow-sm group-hover:scale-110 transition-all">
+                                                <ArrowRight size={18} />
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                </Link>
+                            );
+                        }) : (
+                            <div className="col-span-full py-20 flex justify-center animate-pulse">
+                                <p className="text-slate-400 font-bold tracking-widest uppercase italic">Initializing Collections...</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </section>
         </div>
