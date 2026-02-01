@@ -8,6 +8,7 @@ import {
   Sparkles,
   LogOut,
   ChevronRight,
+  LayoutDashboard,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect, useRef } from "react";
@@ -133,6 +134,17 @@ const Navbar = () => {
                       </p>
                     </div>
                     <ul className="py-2 text-sm text-slate-700 dark:text-gray-200">
+                      {user.role === 'admin' && (
+                        <li>
+                          <Link
+                            to="/admin/dashboard"
+                            className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            <LayoutDashboard size={16} /> Admin Panel
+                          </Link>
+                        </li>
+                      )}
                       <li>
                         <Link
                           to="/profile"
@@ -361,6 +373,21 @@ const Navbar = () => {
                   <button className="w-full bg-primary text-white px-5 py-2 rounded-xl font-bold shadow-lg shadow-primary/30">
                     Register
                   </button>
+                </Link>
+              </li>
+            )}
+
+            {/* Mobile Only: Admin Panel Link */}
+            {user && user.role === 'admin' && (
+              <li className="md:hidden mt-2">
+                <Link
+                  to="/admin/dashboard"
+                  className="block py-2 px-3 text-slate-600 hover:text-primary rounded md:p-0 transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="flex items-center gap-2">
+                    <LayoutDashboard size={16} /> Admin Panel
+                  </div>
                 </Link>
               </li>
             )}

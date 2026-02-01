@@ -156,11 +156,16 @@ const AdminProductEdit = () => {
                         >
                             <option value="">Select Category</option>
                             {parentCategories.map(parent => (
-                                <optgroup key={parent._id} label={parent.name}>
+                                <>
+                                    <option key={parent._id} value={parent._id} className="font-bold text-slate-800">
+                                        {parent.name}
+                                    </option>
                                     {getSubCategories(parent._id).map(sub => (
-                                        <option key={sub._id} value={sub._id}>{sub.name}</option>
+                                        <option key={sub._id} value={sub._id} className="text-slate-600">
+                                            &nbsp;&nbsp;-- {sub.name}
+                                        </option>
                                     ))}
-                                </optgroup>
+                                </>
                             ))}
                         </select>
                     </div>
