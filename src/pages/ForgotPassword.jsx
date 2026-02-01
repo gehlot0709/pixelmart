@@ -34,7 +34,7 @@ const ForgotPassword = () => {
         setError('');
         setMessage('');
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
+            await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
             setStep(2);
             setTimer(30);
         } catch (err) {
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
         setMessage('');
         try {
             // Re-use forgot-password endpoint as it effectively resends OTP
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
+            await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
             setMessage('OTP resent successfully!');
             setTimer(30);
             setTimeout(() => setMessage(''), 3000);
@@ -71,7 +71,7 @@ const ForgotPassword = () => {
         setLoading(true);
         setError('');
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/reset-password`, {
+            await axios.post(`${API_URL}/api/auth/reset-password`, {
                 email,
                 otp,
                 password: newPassword
