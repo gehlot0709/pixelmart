@@ -1,10 +1,23 @@
 
 import { motion } from 'framer-motion';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import API_URL from '../config';
+import { useCart } from '../context/CartContext';
 
 const ProductCard = ({ product }) => {
+    const { addToCart } = useCart();
+    const [isAdded, setIsAdded] = useState(false);
+
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addToCart(product, 1);
+        setIsAdded(true);
+        setTimeout(() => setIsAdded(false), 2000);
+    };
+
     return (
         <motion.div
             whileHover={{ y: -8 }}
@@ -59,12 +72,15 @@ const ProductCard = ({ product }) => {
                     <motion.button
                         whileTap={{ scale: 0.9 }}
                         disabled={product.stock <= 0}
-                        className={`p-3 rounded-xl transition-colors ${product.stock > 0
-                            ? 'bg-slate-800 dark:bg-white text-white dark:text-black hover:bg-primary hover:text-white'
+                        onClick={handleAddToCart}
+                        className={`p-3 rounded-xl transition-all duration-300 ${product.stock > 0
+                            ? isAdded
+                                ? 'bg-green-500 text-white'
+                                : 'bg-slate-800 dark:bg-white text-white dark:text-black hover:bg-primary hover:text-white'
                             : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                             }`}
                     >
-                        <ShoppingCart size={20} />
+                        {isAdded ? <Check size={20} /> : <ShoppingCart size={20} />}
                     </motion.button>
                 </div>
 
