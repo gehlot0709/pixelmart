@@ -34,7 +34,7 @@ const Profile = () => {
 
     try {
       const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/auth/change-password`, { currentPassword, newPassword }, config);
+      await axios.put(`${API_URL}/api/auth/change-password`, { currentPassword, newPassword }, config);
       setPassMessage('Password changed successfully');
       alert('Password changed successfully');
       setCurrentPassword('');
@@ -57,7 +57,7 @@ const Profile = () => {
           },
         };
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/orders/myorders`,
+          `${API_URL}/api/orders/myorders`,
           config
         );
         setOrders(data);
