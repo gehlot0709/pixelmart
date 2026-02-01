@@ -1,4 +1,3 @@
-import { Link, useLocation } from "react-router-dom";
 import {
   ShoppingCart,
   User,
@@ -9,9 +8,13 @@ import {
   LogOut,
   ChevronRight,
   LayoutDashboard,
+  Search,
+  Zap
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import axios from "axios";
 import { useCart } from "../context/CartContext";
 import API_URL from "../config";
@@ -24,8 +27,11 @@ const Navbar = () => {
   const [categories, setCategories] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'shop', 'profile', or null
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const [navSearch, setNavSearch] = useState("");
 
   const location = useLocation();
+  const navigate = useNavigate();
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -63,11 +69,7 @@ const Navbar = () => {
   }, []);
 
   const toggleDropdown = (name) => {
-    if (activeDropdown === name) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(name);
-    }
+    setActiveDropdown(activeDropdown === name ? null : name);
   };
 
   const isActive = (path) => {
@@ -77,6 +79,16 @@ const Navbar = () => {
     return location.pathname === path
       ? "text-primary font-bold"
       : "text-slate-600 hover:text-primary";
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter' || e.type === 'click') {
+      if (navSearch.trim()) {
+        navigate(`/shop?keyword=${navSearch}`);
+        setShowSearch(false);
+        setNavSearch("");
+      }
+    }
   };
 
   return (
@@ -195,10 +207,18 @@ const Navbar = () => {
             </div>
           )}
 
-          <Link to="/cart" className="relative">
-            <ShoppingCart className="w-6 h-6 text-slate-700 dark:text-gray-200 hover:text-primary transition-colors" />
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className="p-2 rounded-xl text-slate-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-gray-800 transition-all"
+            title="Search Products"
+          >
+            <Search size={22} />
+          </button>
+
+          <Link to="/cart" className="relative group p-2">
+            <ShoppingCart className="w-6 h-6 text-slate-700 dark:text-gray-200 group-hover:text-primary transition-colors" />
             {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold px-1.5 py-0.5 rounded-full animate-bounce">
+              <span className="absolute top-0 right-0 bg-secondary text-white text-[10px] font-black px-1.5 py-0.5 rounded-full ring-2 ring-white animate-bounce">
                 {cartItems.length}
               </span>
             )}
@@ -211,6 +231,36 @@ const Navbar = () => {
             {isOpen ? <X /> : <Menu />}
           </button>
         </div>
+
+        {/* Global Search Overlay (Full Width below Navbar) */}
+        {showSearch && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            className="w-full overflow-hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800"
+          >
+            <div className="max-w-screen-xl mx-auto p-4 flex gap-4">
+              <div className="relative flex-grow">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="What are you looking for today? Hit Enter to search..."
+                  className="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary/20 text-lg font-medium"
+                  value={navSearch}
+                  onChange={(e) => setNavSearch(e.target.value)}
+                  onKeyDown={handleSearchSubmit}
+                />
+              </div>
+              <button
+                onClick={() => setShowSearch(false)}
+                className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-red-500 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </motion.div>
+        )}
 
         {/* Main Menu Links */}
         <div
@@ -239,26 +289,27 @@ const Navbar = () => {
                 </button>
 
                 {/* Shop Mega Menu */}
-                <div className={`${activeDropdown === 'shop' ? 'block' : 'hidden'} md:absolute z-10 font-normal bg-white dark:bg-gray-800 divide-y divide-gray-100 rounded-lg shadow-xl w-full md:w-64 top-full left-0 border border-gray-100 dark:border-gray-700 mt-2 md:mt-4`}>
-                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 p-2">
+                <div className={`${activeDropdown === 'shop' ? 'block' : 'hidden'} md:absolute z-50 font-normal bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl divide-y divide-gray-100 rounded-2xl shadow-2xl w-full md:w-80 top-full left-0 border border-gray-100 dark:border-gray-700 mt-2 md:mt-4 p-2 overflow-hidden animate-fade-in-down`}>
+                  <ul className="text-sm text-gray-700 dark:text-gray-200">
                     <li>
                       <Link
                         to="/shop"
-                        className="block px-4 py-2 hover:bg-slate-50 dark:hover:bg-gray-700 font-bold text-primary rounded-lg"
-                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-between px-4 py-3 hover:bg-primary/5 dark:hover:bg-primary/10 font-black text-primary rounded-xl transition-all"
+                        onClick={() => { setIsOpen(false); setActiveDropdown(null); }}
                       >
-                        Shop All
+                        Explore All Infinity <Zap size={16} />
                       </Link>
                     </li>
+                    <div className="h-px bg-slate-100 dark:bg-slate-700 my-2" />
                     {categories
                       .filter((c) => !c.parent)
                       .map((parent) => (
                         <li key={parent._id} className="relative group/sub">
-                          <div className="flex justify-between items-center w-full px-4 py-2 hover:bg-slate-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
+                          <div className={`flex justify-between items-center w-full px-4 py-3 rounded-xl cursor-pointer transition-all ${expandedCategory === parent._id ? 'bg-primary/5 text-primary' : 'hover:bg-slate-50 dark:hover:bg-gray-700'}`}>
                             <Link
                               to={`/shop?category=${parent._id}`}
-                              className="w-full"
-                              onClick={() => setIsOpen(false)}
+                              className="w-full font-bold"
+                              onClick={() => { setIsOpen(false); setActiveDropdown(null); }}
                             >
                               {parent.name}
                             </Link>
@@ -271,38 +322,32 @@ const Navbar = () => {
                                   e.stopPropagation();
                                   setExpandedCategory(expandedCategory === parent._id ? null : parent._id);
                                 }}
-                                className="md:hidden p-1"
+                                className="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-700"
                               >
-                                <ChevronDown size={14} className={`transform ${expandedCategory === parent._id ? 'rotate-180' : ''}`} />
+                                <ChevronDown size={14} className={`transform transition-transform ${expandedCategory === parent._id ? 'rotate-180' : ''}`} />
                               </button>
                             )}
 
                             {/* Desktop Submenu Indicator */}
                             {categories.some(c => c.parent === parent._id) && (
-                              <ChevronRight size={14} className="hidden md:block text-gray-400" />
+                              <ChevronRight size={14} className="hidden md:block text-slate-300 group-hover/sub:text-primary group-hover/sub:translate-x-1 transition-all" />
                             )}
                           </div>
 
-                          {/* Desktop Submenu (Hover) -- Optional: could make this click too, but hover is standard for nested. Keeping simple for now. 
-                              Actually, let's make it show if Expanded on mobile OR hover on desktop? 
-                              For simplicity, we just list them flat on mobile if expanded.
-                          */}
-
-                          {/* Submenu Content */}
+                          {/* Submenu Content (Mobile) */}
                           <div className={`
                             ${expandedCategory === parent._id ? 'block' : 'hidden'} 
-                            md:hidden pl-4
+                            md:hidden overflow-hidden transition-all
                           `}>
-                            {/* Mobile Nested List */}
-                            <ul className="border-l-2 border-gray-100 dark:border-gray-700 ml-2">
+                            <ul className="ml-6 mt-1 border-l-2 border-primary/20 space-y-1 py-1">
                               {categories
                                 .filter((c) => c.parent === parent._id)
                                 .map((sub) => (
                                   <li key={sub._id}>
                                     <Link
                                       to={`/shop?category=${sub._id}`}
-                                      className="block px-4 py-2 text-slate-600 hover:text-primary"
-                                      onClick={() => setIsOpen(false)}
+                                      className="block px-4 py-2 text-sm text-slate-500 hover:text-primary transition-all"
+                                      onClick={() => { setIsOpen(false); setActiveDropdown(null); }}
                                     >
                                       {sub.name}
                                     </Link>
@@ -312,30 +357,24 @@ const Navbar = () => {
                           </div>
 
                           {/* Desktop Submenu (Absolute) */}
-                          <div className="hidden md:group-hover/sub:block absolute left-full top-0 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg shadow-xl w-48 ml-1">
-                            <ul className="py-2">
-                              {categories.filter((c) => c.parent === parent._id)
-                                .length > 0 ? (
-                                categories
-                                  .filter((c) => c.parent === parent._id)
-                                  .map((sub) => (
-                                    <li key={sub._id}>
-                                      <Link
-                                        to={`/shop?category=${sub._id}`}
-                                        className="block px-4 py-2 hover:bg-slate-50 dark:hover:bg-gray-700 text-slate-600 hover:text-primary"
-                                      >
-                                        {sub.name}
-                                      </Link>
-                                    </li>
-                                  ))
-                              ) : (
-                                <li className="px-4 py-2 text-xs text-gray-400">
-                                  No subcategories
+                          <div className="hidden md:group-hover/sub:block absolute left-full top-0 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl w-56 ml-2 p-2 animate-fade-in-right">
+                            <ul className="py-1">
+                              {categories.filter((c) => c.parent === parent._id).map((sub) => (
+                                <li key={sub._id}>
+                                  <Link
+                                    to={`/shop?category=${sub._id}`}
+                                    className="block px-4 py-2.5 rounded-xl hover:bg-primary/5 dark:hover:bg-primary/10 text-slate-600 dark:text-slate-300 hover:text-primary transition-all text-sm font-medium"
+                                    onClick={() => { setIsOpen(false); setActiveDropdown(null); }}
+                                  >
+                                    {sub.name}
+                                  </Link>
                                 </li>
+                              ))}
+                              {categories.filter((c) => c.parent === parent._id).length === 0 && (
+                                <li className="px-4 py-2 text-xs text-slate-400 italic">No sub-collections</li>
                               )}
                             </ul>
                           </div>
-
                         </li>
                       ))}
                   </ul>
