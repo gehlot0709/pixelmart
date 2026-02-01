@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../components/Input';
@@ -13,6 +13,17 @@ const ForgotPassword = () => {
     const [step, setStep] = useState(1); // 1: Email, 2: OTP & New Password
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
+    const [timer, setTimer] = useState(30);
+
+    // Timer Logic for Step 2
+    useEffect(() => {
+        let interval;
+        if (step === 2 && timer > 0) {
+            interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
+        }
+        return () => clearInterval(interval);
+    }, [step, timer]);
 
     const navigate = useNavigate();
 
@@ -20,11 +31,30 @@ const ForgotPassword = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
+        setMessage('');
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
             setStep(2);
+            setTimer(30);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to send OTP');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resendOtpHandler = async () => {
+        setLoading(true);
+        setError('');
+        setMessage('');
+        try {
+            // Re-use forgot-password endpoint as it effectively resends OTP
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
+            setMessage('OTP resent successfully!');
+            setTimer(30);
+            setTimeout(() => setMessage(''), 3000);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to resend OTP');
         } finally {
             setLoading(false);
         }
@@ -64,6 +94,11 @@ const ForgotPassword = () => {
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
                         {error}
+                    </div>
+                )}
+                {message && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+                        {message}
                     </div>
                 )}
 
@@ -112,6 +147,16 @@ const ForgotPassword = () => {
                         <Button type="submit" className="w-full" disabled={loading}>
                             {loading ? 'Resetting...' : 'Reset Password'}
                         </Button>
+                        <div className="text-center mt-3">
+                            <button
+                                type="button"
+                                onClick={resendOtpHandler}
+                                disabled={timer > 0 || loading}
+                                className={`text-sm font-medium ${timer > 0 || loading ? 'text-slate-400 cursor-not-allowed' : 'text-primary hover:underline'}`}
+                            >
+                                {timer > 0 ? `Resend OTP in ${timer}s` : 'Resend OTP'}
+                            </button>
+                        </div>
                         <button
                             type="button"
                             onClick={() => setStep(1)}

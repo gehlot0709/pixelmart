@@ -13,14 +13,19 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
             await login(email, password);
             navigate('/');
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -60,8 +65,8 @@ const Login = () => {
                         <Link to="/forgot-password" className="text-sm text-primary hover:underline">Forgot Password?</Link>
                     </div>
 
-                    <Button type="submit" className="w-full">
-                        Login
+                    <Button type="submit" className="w-full" disabled={loading}>
+                        {loading ? 'Logging in...' : 'Login'}
                     </Button>
                 </form>
 

@@ -17,13 +17,17 @@ const Profile = () => {
   const [passError, setPassError] = useState('');
   const [showPassForm, setShowPassForm] = useState(false);
 
+  const [passLoading, setPassLoading] = useState(false);
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
     setPassMessage('');
     setPassError('');
+    setPassLoading(true);
 
     if (newPassword !== confirmPassword) {
       setPassError('New passwords do not match');
+      setPassLoading(false);
       return;
     }
 
@@ -37,6 +41,8 @@ const Profile = () => {
       setShowPassForm(false);
     } catch (error) {
       setPassError(error.response?.data?.message || 'Failed to update password');
+    } finally {
+      setPassLoading(false);
     }
   };
 
@@ -86,7 +92,7 @@ const Profile = () => {
             <Input label="Current Password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
             <Input label="New Password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
             <Input label="Confirm New Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-            <Button type="submit">Update Password</Button>
+            <Button type="submit" disabled={passLoading}>{passLoading ? 'Updating...' : 'Update Password'}</Button>
           </form>
         </motion.div>
       )}

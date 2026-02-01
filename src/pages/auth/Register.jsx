@@ -15,6 +15,7 @@ const Register = () => {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
     const [timer, setTimer] = useState(30);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -29,6 +30,8 @@ const Register = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
             await register(formData);
             setStep(2);
@@ -36,16 +39,22 @@ const Register = () => {
             setError('');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleVerifyParams = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
             await verifyOTP(formData.email, otp);
             navigate('/');
         } catch (err) {
             setError(err.response?.data?.message || 'OTP Verification failed');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -82,7 +91,9 @@ const Register = () => {
                                 <Input label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} icon={Mail} required placeholder="john@example.com" />
                                 <Input label="Password" name="password" type="password" value={formData.password} onChange={handleChange} icon={Lock} required placeholder="••••••••" />
 
-                                <Button type="submit" className="w-full mt-4">Get OTP</Button>
+                                <Button type="submit" className="w-full mt-4" disabled={loading}>
+                                    {loading ? 'Sending OTP...' : 'Get OTP'}
+                                </Button>
                             </form>
                         </motion.div>
                     ) : (
@@ -104,7 +115,9 @@ const Register = () => {
                                         placeholder="······"
                                     />
                                 </div>
-                                <Button type="submit" className="w-full mb-4">Verify & Register</Button>
+                                <Button type="submit" className="w-full mb-4" disabled={loading}>
+                                    {loading ? 'Verifying...' : 'Verify & Register'}
+                                </Button>
 
                                 <div className="text-center">
                                     <button
