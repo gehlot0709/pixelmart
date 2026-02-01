@@ -185,24 +185,25 @@ const Home = () => {
                                 <Link to={`/shop?category=${cat._id}`} key={cat._id} className="group">
                                     <div className="flex flex-col items-center">
                                         <motion.div
-                                            whileHover={{ y: -10 }}
-                                            className="relative w-40 h-40 md:w-56 md:h-56 rounded-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 shadow-xl flex items-center justify-center p-6 mb-8 group-hover:border-primary/30 transition-all duration-500 overflow-hidden"
+                                            whileHover={{ y: -8 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                            className="relative w-40 h-40 md:w-52 md:h-52 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 shadow-xl flex items-center justify-center mb-6 group-hover:border-primary/40 transition-all duration-300 overflow-hidden"
                                         >
                                             {/* Subtle Glow */}
-                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                             <img
                                                 src={catImg}
                                                 alt={cat.name}
-                                                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                             />
                                         </motion.div>
 
                                         <div className="flex flex-col items-center">
-                                            <span className="text-xl md:text-2xl font-black text-slate-800 dark:text-white tracking-tight group-hover:text-primary transition-colors">
+                                            <span className="text-lg md:text-xl font-black text-slate-800 dark:text-white tracking-tight group-hover:text-primary transition-colors duration-200">
                                                 {cat.name}
                                             </span>
-                                            <div className="mt-2 w-0 group-hover:w-8 h-1 bg-primary transition-all duration-500 rounded-full" />
+                                            <div className="mt-2 w-0 group-hover:w-8 h-1 bg-primary transition-all duration-300 rounded-full" />
                                         </div>
                                     </div>
                                 </Link>
