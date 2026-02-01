@@ -37,9 +37,15 @@ const AdminProductEdit = () => {
 
     useEffect(() => {
         const fetchCats = async () => {
-            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
-            setCategories(data);
-            if (data.length > 0 && !category && !isEdit) setCategory(data[0]._id);
+            try {
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
+                setCategories(data);
+                if (data.length > 0 && !category && !isEdit) setCategory(data[0]._id);
+            } catch (error) {
+                console.error("Failed to fetch categories:", error);
+                // Alert the user if it's an admin page so they know something is wrong
+                // alert("Failed to load categories. Check console for details."); 
+            }
         };
         fetchCats();
     }, []);
