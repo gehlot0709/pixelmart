@@ -1,11 +1,44 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Key } from 'lucide-react';
+import Input from '../components/Input';
+import Button from '../components/Button';
 
 const Profile = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Change Password State
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passMessage, setPassMessage] = useState('');
+  const [passError, setPassError] = useState('');
+  const [showPassForm, setShowPassForm] = useState(false);
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPassMessage('');
+    setPassError('');
+
+    if (newPassword !== confirmPassword) {
+      setPassError('New passwords do not match');
+      return;
+    }
+
+    try {
+      const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/auth/change-password`, { currentPassword, newPassword }, config);
+      setPassMessage('Password changed successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setShowPassForm(false);
+    } catch (error) {
+      setPassError(error.response?.data?.message || 'Failed to update password');
+    }
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -33,7 +66,32 @@ const Profile = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">My Profile</h1>
+        <button
+          onClick={() => setShowPassForm(!showPassForm)}
+          className="flex items-center gap-2 text-primary font-medium hover:underline bg-primary/10 px-4 py-2 rounded-lg"
+        >
+          <Key size={18} /> {showPassForm ? 'Cancel' : 'Change Password'}
+        </button>
+      </div>
+
+      {showPassForm && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="glass dark:glass-dark p-6 rounded-3xl mb-8">
+          <h2 className="text-xl font-bold mb-4">Change Password</h2>
+          {passError && <p className="text-red-500 mb-2">{passError}</p>}
+          {passMessage && <p className="text-green-500 mb-2">{passMessage}</p>}
+          <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
+            <Input label="Current Password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
+            <Input label="New Password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+            <Input label="Confirm New Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+            <Button type="submit">Update Password</Button>
+          </form>
+        </motion.div>
+      )}
+
+      <h2 className="text-2xl font-bold mb-6">My Orders</h2>
 
       {orders.length === 0 ? (
         <div className="text-center glass dark:glass-dark p-12 rounded-3xl">

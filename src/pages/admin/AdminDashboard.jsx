@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { DollarSign, ShoppingCart, Package } from 'lucide-react';
+import API_URL from '../../config';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({ totalOrders: 0, totalSales: 0, topProducts: [] });
@@ -11,7 +12,7 @@ const AdminDashboard = () => {
         const fetchStats = async () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/orders/stats/sales`, config);
+                const { data } = await axios.get(`${API_URL}/api/orders/stats/sales`, config);
                 setStats(data);
             } catch (error) {
                 console.error(error);

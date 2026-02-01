@@ -2,7 +2,9 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Check, X, Eye, AlertTriangle } from 'lucide-react';
+import API_URL from '../../config';
 
 const AdminOrderList = () => {
     const [orders, setOrders] = useState([]);
@@ -11,7 +13,7 @@ const AdminOrderList = () => {
     const fetchOrders = useCallback(async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/orders`, config);
+            const { data } = await axios.get(`${API_URL}/api/orders`, config);
             setOrders(data);
         } catch (error) {
             console.error(error);
@@ -27,7 +29,7 @@ const AdminOrderList = () => {
         if (!window.confirm('Mark as Delivered?')) return;
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-            await axios.put(`${import.meta.env.VITE_API_URL}/api/orders/${id}/deliver`, {}, config);
+            await axios.put(`${API_URL}/api/orders/${id}/deliver`, {}, config);
             fetchOrders();
         } catch (error) {
             alert('Error');
@@ -81,7 +83,7 @@ const AdminOrderList = () => {
                                         <span className="text-red-500 flex items-center"><X size={16} className="mr-1" /> Pending</span>
                                     )}
                                     {order.paymentMethod === 'QR Code' && order.paymentResult?.screenshot && (
-                                        <a href={`${import.meta.env.VITE_API_URL}${order.paymentResult.screenshot}`} target="_blank" rel="noreferrer" className="text-xs text-blue-500 block mt-1 hover:underline">View Proof</a>
+                                        <a href={`${API_URL}${order.paymentResult.screenshot}`} target="_blank" rel="noreferrer" className="text-xs text-blue-500 block mt-1 hover:underline">View Proof</a>
                                     )}
                                 </td>
                                 <td className="p-4">

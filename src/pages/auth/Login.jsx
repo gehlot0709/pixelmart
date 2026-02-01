@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
 import { Mail, Lock } from 'lucide-react';
@@ -57,7 +57,7 @@ const Login = () => {
                     />
 
                     <div className="flex justify-end mb-6">
-                        <a href="#" className="text-sm text-primary hover:underline">Forgot Password?</a>
+                        <Link to="/forgot-password" className="text-sm text-primary hover:underline">Forgot Password?</Link>
                     </div>
 
                     <Button type="submit" className="w-full">

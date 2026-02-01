@@ -7,6 +7,7 @@ import ScrollToTop from './components/ScrollToTop';
 
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
@@ -39,6 +40,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
 
           <Route path="shop" element={<Shop />} />
           <Route path="offers" element={<Shop />} />

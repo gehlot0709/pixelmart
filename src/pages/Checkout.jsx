@@ -13,10 +13,15 @@ const Checkout = () => {
     const { } = useAuth();
     const navigate = useNavigate();
 
+    const [name, setName] = useState(cart.shippingAddress?.name || '');
+    const [email, setEmail] = useState(cart.shippingAddress?.email || '');
+    const [houseNumber, setHouseNumber] = useState(cart.shippingAddress?.houseNumber || '');
+    const [flatSociety, setFlatSociety] = useState(cart.shippingAddress?.flatSociety || '');
     const [address, setAddress] = useState(cart.shippingAddress?.address || '');
     const [city, setCity] = useState(cart.shippingAddress?.city || '');
+    const [state, setState] = useState(cart.shippingAddress?.state || '');
     const [postalCode, setPostalCode] = useState(cart.shippingAddress?.postalCode || '');
-    const [country, setCountry] = useState(cart.shippingAddress?.country || '');
+    const [country, setCountry] = useState(cart.shippingAddress?.country || 'India');
     const [phone, setPhone] = useState(cart.shippingAddress?.phone || '');
     const [paymentMethod, setPaymentMethod] = useState('QR Code');
     const [paymentProof, setPaymentProof] = useState(null);
@@ -57,9 +62,9 @@ const Checkout = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         setError('');
-        saveShippingAddress({ address, city, postalCode, country, phone });
+        saveShippingAddress({ name, email, houseNumber, flatSociety, address, city, state, postalCode, country, phone });
 
-        if (!address || !city || !postalCode || !country || !phone) {
+        if (!name || !email || !houseNumber || !flatSociety || !address || !city || !state || !postalCode || !country || !phone) {
             setError('Please fill in all shipping fields correctly.');
             window.scrollTo(0, 0); // Scroll to top to see error
             return;
@@ -83,7 +88,7 @@ const Checkout = () => {
 
             const orderData = {
                 orderItems: cart.cartItems,
-                shippingAddress: { address, city, postalCode, country, phone },
+                shippingAddress: { name, email, houseNumber, flatSociety, address, city, state, postalCode, country, phone },
                 paymentMethod,
                 itemsPrice,
                 totalPrice,
@@ -115,14 +120,31 @@ const Checkout = () => {
                     </div>
                 )}
 
-                <form onSubmit={submitHandler} id="checkout-form">
-                    <Input label="Address" value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="123 Main St" />
+                <form onSubmit={submitHandler} id="checkout-form" className="space-y-4">
+                    {/* New Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} required placeholder="John Doe" />
+                        <Input label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="john@example.com" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input label="Home Number" value={houseNumber} onChange={(e) => setHouseNumber(e.target.value)} required placeholder="A-101" />
+                        <Input label="Flat/Society Name" value={flatSociety} onChange={(e) => setFlatSociety(e.target.value)} required placeholder="Galaxy Apartments" />
+                    </div>
+
+                    <Input label="Street Address / Area" value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="MG Road, Near Park" />
+
                     <div className="grid grid-cols-2 gap-4">
                         <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} required placeholder="Mumbai" />
-                        <Input label="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required placeholder="400001" />
+                        <Input label="State" value={state} onChange={(e) => setState(e.target.value)} required placeholder="Maharashtra" />
                     </div>
-                    <Input label="Country" value={country} onChange={(e) => setCountry(e.target.value)} required placeholder="India" />
-                    <Input label="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+91 9876543210" />
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input label="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required placeholder="400001" />
+                        <Input label="Country" value={country} onChange={(e) => setCountry(e.target.value)} required placeholder="India" />
+                    </div>
+
+                    <Input label="Contact Number" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+91 9876543210" />
                 </form>
             </motion.div>
 
