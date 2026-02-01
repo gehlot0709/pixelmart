@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Edit, Trash2, Plus } from 'lucide-react';
-import { Edit, Trash2, Plus } from 'lucide-react';
+
 import Button from '../../components/Button';
 import API_URL from '../../config';
 

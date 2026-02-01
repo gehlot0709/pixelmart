@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 import { motion } from 'framer-motion';
-import { motion } from 'framer-motion';
+
 import { Check, X, Eye, AlertTriangle } from 'lucide-react';
 import API_URL from '../../config';
 
