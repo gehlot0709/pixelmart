@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import API_URL from '../../config';
 
 // Pre-defined colors for picker
 const PRESET_COLORS = [
@@ -38,7 +39,7 @@ const AdminProductEdit = () => {
     useEffect(() => {
         const fetchCats = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`);
+                const { data } = await axios.get(`${API_URL}/api/categories`);
                 setCategories(data);
                 if (data.length > 0 && !category && !isEdit) setCategory(data[0]._id);
             } catch (error) {
@@ -53,7 +54,7 @@ const AdminProductEdit = () => {
     useEffect(() => {
         if (isEdit) {
             const fetchProduct = async () => {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
+                const { data } = await axios.get(`${API_URL}/api/products/${id}`);
                 setTitle(data.title);
                 setPrice(data.price);
                 setDescription(data.description);
@@ -119,7 +120,7 @@ const AdminProductEdit = () => {
             if (isEdit) {
                 alert("Update logic pending backend implementation. Please add new product for now.");
             } else {
-                await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, formData, config);
+                await axios.post(`${API_URL}/api/products`, formData, config);
                 navigate('/admin/products');
             }
         } catch (error) {
