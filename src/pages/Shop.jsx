@@ -26,9 +26,13 @@ const Shop = () => {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const catParam = queryParams.get("category");
+    const keyParam = queryParams.get("keyword");
 
     if (catParam && catParam !== category) {
       setCategory(catParam);
+    }
+    if (keyParam !== null && keyParam !== keyword) {
+      setKeyword(keyParam);
     }
 
     const fetchCategories = async () => {
@@ -78,24 +82,9 @@ const Shop = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      {/* 1. Full Width Search Bar (Top) */}
-      <div className="mb-12 animate-fade-in-down w-full max-w-5xl mx-auto">
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-8 flex items-center pointer-events-none">
-            <Search className="text-slate-400 group-focus-within:text-primary transition-colors" size={26} />
-          </div>
-          <input
-            type="text"
-            placeholder="What are you looking for today?"
-            className="w-full pl-20 pr-10 py-7 rounded-[3rem] bg-white dark:bg-slate-800 border-none shadow-2xl shadow-slate-200/50 dark:shadow-none focus:ring-4 focus:ring-primary/10 transition-all text-xl font-medium"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-          />
-        </div>
-      </div>
 
       {/* 2. Unified Controls Bar */}
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-center mb-16 relative z-40">
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-center mb-10 relative z-40">
         {/* Category Dropdown Context */}
         <div className="relative w-full md:w-[320px]">
           <button
@@ -212,7 +201,7 @@ const Shop = () => {
                 <button onClick={() => { setCategory(""); setKeyword(""); }} className="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-black rounded-[2.5rem] font-black uppercase tracking-[0.2em] text-sm shadow-2xl hover:scale-110 active:scale-95 transition-all">Reset All Filters</button>
               </motion.div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 transition-premium">
                 {products.map((product, idx) => (
                   <motion.div
                     key={product._id}

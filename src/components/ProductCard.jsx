@@ -1,6 +1,6 @@
 
 import { motion } from 'framer-motion';
-import { Star, ShoppingCart, Check } from 'lucide-react';
+import { Star, Heart, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import API_URL from '../config';
@@ -8,89 +8,92 @@ import { useCart } from '../context/CartContext';
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
-    const [isAdded, setIsAdded] = useState(false);
+    const [isWishlisted, setIsWishlisted] = useState(false);
 
-    const handleAddToCart = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        addToCart(product, 1);
-        setIsAdded(true);
-        setTimeout(() => setIsAdded(false), 2000);
-    };
+    const discountPercentage = product.price && product.salePrice
+        ? Math.round(((product.price - product.salePrice) / product.price) * 100)
+        : 0;
 
     return (
         <motion.div
-            whileHover={{ y: -8 }}
-            className="group rounded-3xl glass dark:glass-dark overflow-hidden relative"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4 }}
+            className="group relative bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden transition-premium"
         >
-            <Link to={`/product/${product._id}`}>
-                <div className="h-64 overflow-hidden relative bg-white">
+            <Link to={`/product/${product._id}`} className="block">
+                {/* Image Container */}
+                <div className="relative aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-800 rounded-[2rem]">
                     <img
                         src={product.images && product.images[0]
                             ? (product.images[0].startsWith('http') ? product.images[0] : `${API_URL}${product.images[0]}`)
-                            : 'https://via.placeholder.com/300'}
+                            : 'https://via.placeholder.com/300x400'}
                         alt={product.title}
-                        className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-premium duration-700"
                     />
 
+
+                    {/* Wishlist Button */}
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setIsWishlisted(!isWishlisted);
+                        }}
+                        className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-md rounded-full text-slate-800 hover:text-secondary hover:scale-110 transition-premium shadow-sm"
+                    >
+                        <Heart size={20} className={isWishlisted ? "fill-secondary text-secondary" : ""} />
+                    </button>
+
+
+                    {/* Stock Status */}
                     {product.stock <= 0 && (
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                            <span className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold">Out of Stock</span>
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center">
+                            <span className="bg-white/90 backdrop-blur-md text-slate-900 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
+                                Out of Stock
+                            </span>
                         </div>
                     )}
                 </div>
-            </Link>
 
-            <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                    <div>
-                        <p className="text-xs text-primary font-semibold uppercase tracking-wider mb-1">{product.category?.name || 'Category'}</p>
-                        <Link to={`/product/${product._id}`}>
-                            <h3 className="font-bold text-lg truncate hover:text-primary transition">{product.title}</h3>
-                        </Link>
+                {/* Content */}
+                <div className="p-4 md:p-5">
+                    <div className="mb-2">
+                        <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium truncate">
+                            {product.title}
+                        </p>
                     </div>
-                    <div className="flex items-center text-yellow-500 text-sm font-bold bg-yellow-500/10 px-2 py-1 rounded-lg">
-                        <Star size={14} className="fill-current mr-1" />
-                        {product.averageRating || 0}
-                    </div>
-                </div>
 
-                <p className="text-slate-500 text-sm line-clamp-2 mb-4 h-10">{product.description}</p>
-
-                <div className="flex items-center justify-between">
-                    <div>
-                        {product.salePrice > 0 ? (
-                            <div className="flex flex-col">
-                                <span className="text-slate-400 line-through text-xs">₹{product.price}</span>
-                                <span className="text-xl font-bold text-primary">₹{product.salePrice}</span>
-                            </div>
-                        ) : (
-                            <span className="text-xl font-bold text-slate-800 dark:text-white">₹{product.price}</span>
+                    <div className="flex items-center flex-wrap gap-2 mb-2">
+                        {discountPercentage > 0 && (
+                            <span className="text-sm font-black text-green-600 flex items-center gap-0.5">
+                                <span className="text-[10px] transform rotate-180">↑</span>
+                                {discountPercentage}%
+                            </span>
                         )}
+                        <span className="text-sm md:text-base font-bold text-slate-400 line-through">
+                            ₹{product.price}
+                        </span>
+                        <span className="text-lg md:text-xl font-black text-slate-900 dark:text-white">
+                            ₹{product.salePrice || product.price}
+                        </span>
                     </div>
 
-                    <motion.button
-                        whileTap={{ scale: 0.9 }}
-                        disabled={product.stock <= 0}
-                        onClick={handleAddToCart}
-                        className={`p-3 rounded-xl transition-all duration-300 ${product.stock > 0
-                            ? isAdded
-                                ? 'bg-green-500 text-white'
-                                : 'bg-slate-800 dark:bg-white text-white dark:text-black hover:bg-primary hover:text-white'
-                            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                            }`}
-                    >
-                        {isAdded ? <Check size={20} /> : <ShoppingCart size={20} />}
-                    </motion.button>
-                </div>
+                    {/* Badge */}
+                    <div className="flex items-center gap-2 mb-3">
+                        <span className="px-2 py-0.5 bg-green-50 text-green-600 text-[10px] font-black rounded-sm border border-green-100 flex items-center gap-1">
+                            Hot Deal
+                        </span>
+                    </div>
 
-                {product.deliveryTime && (
-                    <p className="text-xs text-slate-400 mt-3 flex items-center">
-                        <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-                        Delivery in {product.deliveryTime}
-                    </p>
-                )}
-            </div>
+                    {/* Delivery */}
+                    <div className="flex items-center justify-between mt-auto">
+                        <p className="text-[10px] md:text-xs text-slate-500 font-medium">
+                            Delivery by <span className="font-black text-slate-900 dark:text-slate-200">5th Feb</span>
+                        </p>
+                    </div>
+                </div>
+            </Link>
         </motion.div>
     );
 };

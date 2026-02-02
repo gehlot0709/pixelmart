@@ -1,7 +1,6 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LayoutDashboard, Package, ShoppingBag, LogOut, Home } from 'lucide-react';
-import ParticlesBackground from '../components/ParticlesBackground';
 
 const AdminLayout = () => {
     const { logout } = useAuth();
@@ -14,7 +13,6 @@ const AdminLayout = () => {
 
     return (
         <div className="flex h-screen bg-gray-100 dark:bg-slate-900 text-slate-800 dark:text-gray-100 overflow-hidden relative">
-            <ParticlesBackground />
 
             {/* Sidebar */}
             <aside className="w-64 glass dark:glass-dark flex flex-col z-20 shadow-2xl">

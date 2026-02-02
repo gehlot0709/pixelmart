@@ -2,40 +2,25 @@
 
 @layer base {
   body {
-    /* bg-light is likely a custom theme color, we can use hex or recreate theme in v4 css if needed. 
-       For v4, theme Configuration is often CSS based or detected automatically.
-       Since we had custom colors in tailwind.config.js, we should migrate them or stick to v3 compat if user prefers v3. 
-       User said: "don't add post css add tailwind built class".
-       Tailwind v4 uses `@import "tailwindcss";` and CSS variables for theme.
-    */
     background-color: #f8fafc;
-    color: #1e293b;
-    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom Utilities */
-.glass {
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.glass-dark {
-  background-color: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Re-adding custom theme variables for v4 compatibility if needed, or directly using hex in components */
 @theme {
-  --color-primary: #6366f1;
-  --color-secondary: #ec4899;
-  --color-dark: #0f172a;
-  --color-light: #f8fafc;
-  --color-accent: #8b5cf6;
+  --color-primary: #6366f1;           /* Indigo-500 */
+  --color-primary-dark: #4f46e5;      /* Indigo-600 */
+  --color-secondary: #f43f5e;         /* Rose-500 */
+  --color-accent: #8b5cf6;            /* Violet-500 */
+  --color-dark: #020617;              /* Slate-950 */
+  --color-light: #f8fafc;             /* Slate-50 */
+  --color-surface: #ffffff;
+  
+  --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-inner-glass: inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
 
   @keyframes fade-in-up {
     from { opacity: 0; transform: translateY(20px); }
@@ -53,11 +38,46 @@
     from { opacity: 0; }
     to { opacity: 1; }
   }
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
 
-  --animate-fade-in-up: fade-in-up 0.5s ease-out forwards;
-  --animate-fade-in-down: fade-in-down 0.3s ease-out forwards;
-  --animate-fade-in-right: fade-in-right 0.3s ease-out forwards;
-  --animate-fade-in: fade-in 0.3s ease-out forwards;
+  --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in-down: fade-in-down 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in-right: fade-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-float: float 4s ease-in-out infinite;
+}
+
+/* Custom Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-premium-gradient {
+  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent),
+              radial-gradient(circle at bottom left, rgba(244, 63, 94, 0.05), transparent);
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -66,4 +86,9 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Custom transitions */
+.transition-premium {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
