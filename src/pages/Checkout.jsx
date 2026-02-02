@@ -7,6 +7,7 @@ import API_URL from '../config';
 import Input from '../components/Input';
 import { motion } from 'framer-motion';
 import Button from '../components/Button';
+import { Zap, ShieldCheck, Truck, ArrowRight } from 'lucide-react';
 
 
 const Checkout = () => {
@@ -21,7 +22,7 @@ const Checkout = () => {
     const [city, setCity] = useState(cart.shippingAddress?.city || '');
     const [state, setState] = useState(cart.shippingAddress?.state || '');
     const [postalCode, setPostalCode] = useState(cart.shippingAddress?.postalCode || '');
-    const [country, setCountry] = useState(cart.shippingAddress?.country || 'India');
+    const [country, setCountry] = useState(cart.shippingAddress?.country || '');
     const [phone, setPhone] = useState(cart.shippingAddress?.phone || '');
     const [paymentMethod, setPaymentMethod] = useState('QR Code');
     const [paymentProof, setPaymentProof] = useState(null);
@@ -136,25 +137,25 @@ const Checkout = () => {
 
                         <form onSubmit={submitHandler} id="checkout-form" className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                             <div className="md:col-span-2">
-                                <Input label="Full Identity" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Pratham Sharma" />
+                                <Input label="Full Identity" value={name} onChange={(e) => setName(e.target.value)} required placeholder="" />
                             </div>
-                            <Input label="Digital Addr" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="pratham@pixelmart.com" />
-                            <Input label="Direct Line" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+91 98765 43210" />
+                            <Input label="Digital Addr" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="" />
+                            <Input label="Direct Line" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="" />
 
                             <div className="md:col-span-2 grid grid-cols-2 gap-8">
-                                <Input label="Foundation #" value={houseNumber} onChange={(e) => setHouseNumber(e.target.value)} required placeholder="Flat 402" />
-                                <Input label="Domain Name" value={flatSociety} onChange={(e) => setFlatSociety(e.target.value)} required placeholder="Crystal Heights" />
+                                <Input label="Foundation #" value={houseNumber} onChange={(e) => setHouseNumber(e.target.value)} required placeholder="" />
+                                <Input label="Domain Name" value={flatSociety} onChange={(e) => setFlatSociety(e.target.value)} required placeholder="" />
                             </div>
 
                             <div className="md:col-span-2">
-                                <Input label="Street Pathway" value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="12th Main, Indiranagar" />
+                                <Input label="Street Pathway" value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="" />
                             </div>
 
-                            <Input label="Nexus City" value={city} onChange={(e) => setCity(e.target.value)} required placeholder="Bengaluru" />
-                            <Input label="Province State" value={state} onChange={(e) => setState(e.target.value)} required placeholder="Karnataka" />
+                            <Input label="Nexus City" value={city} onChange={(e) => setCity(e.target.value)} required placeholder="" />
+                            <Input label="Province State" value={state} onChange={(e) => setState(e.target.value)} required placeholder="" />
 
-                            <Input label="Cipher Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required placeholder="560038" />
-                            <Input label="Nation Territory" value={country} onChange={(e) => setCountry(e.target.value)} required placeholder="India" />
+                            <Input label="Cipher Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required placeholder="" />
+                            <Input label="Nation Territory" value={country} onChange={(e) => setCountry(e.target.value)} required placeholder="" />
                         </form>
                     </section>
 

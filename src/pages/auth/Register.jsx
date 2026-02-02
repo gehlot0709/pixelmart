@@ -112,7 +112,7 @@ const Register = () => {
                                         value={otp}
                                         onChange={(e) => setOtp(e.target.value)}
                                         className="w-full text-center text-3xl tracking-[1rem] py-3 bg-white/50 border border-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                                        placeholder="······"
+                                        placeholder=""
                                     />
                                 </div>
                                 <Button type="submit" className="w-full mb-4" disabled={loading}>

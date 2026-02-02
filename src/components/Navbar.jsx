@@ -287,7 +287,7 @@ const Navbar = () => {
                 value={navSearch}
                 onChange={(e) => setNavSearch(e.target.value)}
                 onKeyDown={handleSearchSubmit}
-                placeholder="Search PixelMart..."
+                placeholder=""
                 className="flex-1 bg-transparent border-none outline-none text-sm font-bold tracking-tight py-3 text-slate-900 placeholder:text-slate-400"
               />
               <button
