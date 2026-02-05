@@ -201,7 +201,7 @@ const Shop = () => {
               >
                 <div className={`w-28 h-28 md:w-40 md:h-40 rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border-4 transition-all duration-500 ${category === sub._id ? 'border-primary shadow-2xl shadow-primary/30 scale-105' : 'border-white dark:border-slate-800 shadow-xl group-hover:border-primary/50'}`}>
                   <img
-                    src={sub.image}
+                    src={sub.image && (sub.image.startsWith('/') || sub.image.startsWith('http')) ? sub.image : `${API_URL}${sub.image}`}
                     alt={sub.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
