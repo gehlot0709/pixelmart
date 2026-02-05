@@ -27,7 +27,12 @@ const ProductCard = ({ product }) => {
                 <div className="relative aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-800 rounded-[2rem]">
                     <img
                         src={product.images && product.images[0]
-                            ? (product.images[0].startsWith('http') ? product.images[0] : `${API_URL}${product.images[0]}`)
+                            ? (() => {
+                                const img = product.images[0];
+                                if (img.startsWith('http') && !img.includes('localhost:5000')) return img;
+                                const path = img.replace(/^http:\/\/localhost:5000/, '');
+                                return path.startsWith('http') ? path : `${API_URL}${path}`;
+                            })()
                             : 'https://via.placeholder.com/300x400'}
                         alt={product.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-premium duration-700"
