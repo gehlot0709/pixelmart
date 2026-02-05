@@ -30,8 +30,10 @@ const ProductCard = ({ product }) => {
                             ? (() => {
                                 const img = product.images[0];
                                 if (img.startsWith('http') && !img.includes('localhost:5000')) return img;
-                                const path = img.replace(/^http:\/\/localhost:5000/, '');
-                                return path.startsWith('http') ? path : `${API_URL}${path}`;
+                                let path = img.replace(/^http:\/\/localhost:5000/, '');
+                                path = path.replace(/^\/uploads\//, '/assets/');
+                                path = path.replace(/^\/server\/uploads\//, '/assets/');
+                                return path.startsWith('/') ? path : `${API_URL}${path}`;
                             })()
                             : 'https://via.placeholder.com/300x400'}
                         alt={product.title}

@@ -204,7 +204,10 @@ const Shop = () => {
                     src={sub.image ? (() => {
                       const img = sub.image;
                       if (img.startsWith('http') && !img.includes('localhost:5000')) return img;
-                      const path = img.replace(/^http:\/\/localhost:5000/, '');
+                      // Map legacy paths to public assets
+                      let path = img.replace(/^http:\/\/localhost:5000/, '');
+                      path = path.replace(/^\/uploads\//, '/assets/');
+                      path = path.replace(/^\/server\/uploads\//, '/assets/');
                       return path.startsWith('/') ? path : `${API_URL}${path}`;
                     })() : '/assets/placeholder.png'}
                     alt={sub.name}

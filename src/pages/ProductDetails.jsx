@@ -101,7 +101,13 @@ const ProductDetails = () => {
                                     }`}
                             >
                                 <img
-                                    src={img.startsWith('http') ? img : `${API_URL}${img}`}
+                                    src={(() => {
+                                        if (img.startsWith('http') && !img.includes('localhost:5000')) return img;
+                                        let path = img.replace(/^http:\/\/localhost:5000/, '');
+                                        path = path.replace(/^\/uploads\//, '/assets/');
+                                        path = path.replace(/^\/server\/uploads\//, '/assets/');
+                                        return path.startsWith('/') ? path : `${API_URL}${path}`;
+                                    })()}
                                     className="w-full h-full object-cover"
                                     alt={`Thumbnail ${index}`}
                                 />
@@ -116,7 +122,13 @@ const ProductDetails = () => {
                             initial={{ opacity: 0, scale: 1.1 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.6, ease: "easeOut" }}
-                            src={mainImage.startsWith('http') ? mainImage : `${API_URL}${mainImage}`}
+                            src={(() => {
+                                if (mainImage.startsWith('http') && !mainImage.includes('localhost:5000')) return mainImage;
+                                let path = mainImage.replace(/^http:\/\/localhost:5000/, '');
+                                path = path.replace(/^\/uploads\//, '/assets/');
+                                path = path.replace(/^\/server\/uploads\//, '/assets/');
+                                return path.startsWith('/') ? path : `${API_URL}${path}`;
+                            })()}
                             className="w-full h-full object-contain p-8 md:p-12 mix-blend-multiply dark:mix-blend-normal"
                             alt={product.title}
                         />

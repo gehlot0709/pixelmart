@@ -66,7 +66,13 @@ const Cart = () => {
                                 >
                                     <div className="w-32 h-32 flex-shrink-0 rounded-3xl overflow-hidden bg-white/50 p-2">
                                         <img
-                                            src={item.image.startsWith('http') ? item.image : `${API_URL}${item.image}`}
+                                            src={(() => {
+                                                if (item.image.startsWith('http') && !item.image.includes('localhost:5000')) return item.image;
+                                                let path = item.image.replace(/^http:\/\/localhost:5000/, '');
+                                                path = path.replace(/^\/uploads\//, '/assets/');
+                                                path = path.replace(/^\/server\/uploads\//, '/assets/');
+                                                return path.startsWith('/') ? path : `${API_URL}${path}`;
+                                            })()}
                                             alt={item.name}
                                             className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-premium duration-500"
                                         />

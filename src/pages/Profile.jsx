@@ -164,7 +164,13 @@ const Profile = () => {
                   {order.orderItems.map((item, index) => (
                     <div key={index} className="flex items-center gap-6 group/item">
                       <div className="w-16 h-16 rounded-2xl bg-white/50 p-1 flex-shrink-0 overflow-hidden">
-                        <img src={item.image.startsWith('http') ? item.image : `${API_URL}${item.image}`} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover/item:scale-110 transition-premium" />
+                        <img src={(() => {
+                          if (item.image.startsWith('http') && !item.image.includes('localhost:5000')) return item.image;
+                          let path = item.image.replace(/^http:\/\/localhost:5000/, '');
+                          path = path.replace(/^\/uploads\//, '/assets/');
+                          path = path.replace(/^\/server\/uploads\//, '/assets/');
+                          return path.startsWith('/') ? path : `${API_URL}${path}`;
+                        })()} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover/item:scale-110 transition-premium" />
                       </div>
                       <div className="flex-1">
                         <h4 className="text-sm font-black text-slate-900 dark:text-white line-clamp-1">{item.name}</h4>
@@ -178,7 +184,13 @@ const Profile = () => {
                   <div className="flex -space-x-3 overflow-hidden">
                     {order.orderItems.slice(0, 3).map((item, i) => (
                       <div key={i} className="inline-block h-8 w-8 rounded-full ring-4 ring-white dark:ring-slate-900 bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                        <img src={item.image.startsWith('http') ? item.image : `${API_URL}${item.image}`} className="h-full w-full object-cover" alt="" />
+                        <img src={(() => {
+                          if (item.image.startsWith('http') && !item.image.includes('localhost:5000')) return item.image;
+                          let path = item.image.replace(/^http:\/\/localhost:5000/, '');
+                          path = path.replace(/^\/uploads\//, '/assets/');
+                          path = path.replace(/^\/server\/uploads\//, '/assets/');
+                          return path.startsWith('/') ? path : `${API_URL}${path}`;
+                        })()} className="h-full w-full object-cover" alt="" />
                       </div>
                     ))}
                     {order.orderItems.length > 3 && (
