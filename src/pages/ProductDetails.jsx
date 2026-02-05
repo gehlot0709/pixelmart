@@ -26,7 +26,7 @@ const ProductDetails = () => {
             try {
                 const { data } = await axios.get(`${API_URL}/api/products/${id}`);
                 setProduct(data);
-                setMainImage(data.images[0]);
+                setMainImage(data.mainImage || data.images[0]);
                 if (data.sizes?.length > 0) setSelectedSize(data.sizes[0]);
                 if (data.colors?.length > 0) setSelectedColor(data.colors[0]);
             } catch (error) {

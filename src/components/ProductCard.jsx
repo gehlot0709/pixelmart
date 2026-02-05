@@ -26,16 +26,15 @@ const ProductCard = ({ product }) => {
                 {/* Image Container */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-800 rounded-[2rem]">
                     <img
-                        src={product.images && product.images[0]
-                            ? (() => {
-                                const img = product.images[0];
-                                if (img.startsWith('http') && !img.includes('localhost:5000')) return img;
-                                let path = img.replace(/^http:\/\/localhost:5000/, '');
-                                path = path.replace(/^\/uploads\//, '/assets/');
-                                path = path.replace(/^\/server\/uploads\//, '/assets/');
-                                return path.startsWith('/') ? path : `${API_URL}${path}`;
-                            })()
-                            : 'https://via.placeholder.com/300x400'}
+                        src={(() => {
+                            const img = product.mainImage || (product.images && product.images[0]);
+                            if (!img) return 'https://via.placeholder.com/300x400';
+                            if (img.startsWith('http') && !img.includes('localhost:5000')) return img;
+                            let path = img.replace(/^http:\/\/localhost:5000/, '');
+                            path = path.replace(/^\/uploads\//, '/assets/');
+                            path = path.replace(/^\/server\/uploads\//, '/assets/');
+                            return path.startsWith('/') ? path : `${API_URL}${path}`;
+                        })()}
                         alt={product.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-premium duration-700"
                     />

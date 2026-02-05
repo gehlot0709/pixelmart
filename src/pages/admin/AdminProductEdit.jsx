@@ -32,6 +32,8 @@ const AdminProductEdit = () => {
 
     const [deliveryTime, setDeliveryTime] = useState('3-5 Business Days');
     const [isOffer, setIsOffer] = useState(false);
+    const [mainImg, setMainImg] = useState(null);
+    const [mainImgPreview, setMainImgPreview] = useState('');
     const [images, setImages] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -76,6 +78,9 @@ const AdminProductEdit = () => {
 
                 setDeliveryTime(data.deliveryTime);
                 setIsOffer(data.isOffer || false);
+                if (data.mainImage) {
+                    setMainImgPreview(data.mainImage);
+                }
             };
             fetchProduct();
         }
@@ -109,6 +114,10 @@ const AdminProductEdit = () => {
 
         formData.append('deliveryTime', deliveryTime);
         formData.append('isOffer', isOffer);
+
+        if (mainImg) {
+            formData.append('mainImage', mainImg);
+        }
 
         if (images) {
             for (let i = 0; i < images.length; i++) {
@@ -329,14 +338,44 @@ const AdminProductEdit = () => {
                     </label>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium mb-1">Product Images</label>
-                    <input
-                        type="file"
-                        multiple
-                        onChange={(e) => setImages(e.target.files)}
-                        className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Main Product Image <span className="text-primary font-bold">(Priority)</span></label>
+                        <div className="space-y-4">
+                            <input
+                                type="file"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    setMainImg(file);
+                                    if (file) {
+                                        setMainImgPreview(URL.createObjectURL(file));
+                                    }
+                                }}
+                                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                            />
+                            {mainImgPreview && (
+                                <div className="relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-primary/20 shadow-lg">
+                                    <img
+                                        src={mainImgPreview.startsWith('http') ? mainImgPreview : mainImgPreview}
+                                        alt="Main Preview"
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute top-0 right-0 bg-primary text-white text-[8px] px-2 py-0.5 font-bold uppercase">Main</div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Gallery Images <span className="text-slate-400">(Max 5)</span></label>
+                        <input
+                            type="file"
+                            multiple
+                            onChange={(e) => setImages(e.target.files)}
+                            className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-600 hover:file:bg-slate-200"
+                        />
+                        <p className="text-[10px] text-slate-400 mt-2 font-medium italic">* These will appear as small thumbnails below the main image</p>
+                    </div>
                 </div>
 
                 <Button type="submit" className="w-full" disabled={loading}>

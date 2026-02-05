@@ -60,7 +60,7 @@ export const CartProvider = ({ children }) => {
             payload: {
                 product: product._id,
                 name: product.title,
-                image: (product.images && product.images.length > 0) ? product.images[0] : 'https://via.placeholder.com/300',
+                image: product.mainImage || ((product.images && product.images.length > 0) ? product.images[0] : 'https://via.placeholder.com/300'),
                 price: product.salePrice > 0 ? product.salePrice : product.price,
                 stock: product.stock,
                 qty,
