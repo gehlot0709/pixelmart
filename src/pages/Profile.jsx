@@ -33,8 +33,9 @@ const Profile = () => {
     }
 
     try {
+      const safeApiUrl = API_URL || "https://pixelmartserver.vercel.app";
       const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-      await axios.put(`${API_URL}/api/auth/change-password`, { currentPassword, newPassword }, config);
+      await axios.put(`${safeApiUrl}/api/auth/change-password`, { currentPassword, newPassword }, config);
       setPassMessage('Identity Cipher Updated');
       alert('Password changed successfully');
       setCurrentPassword('');
@@ -56,8 +57,9 @@ const Profile = () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         };
+        const safeApiUrl = API_URL || "https://pixelmartserver.vercel.app";
         const { data } = await axios.get(
-          `${API_URL}/api/orders/myorders`,
+          `${safeApiUrl}/api/orders/myorders`,
           config
         );
         setOrders(data);
