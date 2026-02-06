@@ -107,7 +107,7 @@ const Shop = () => {
               <motion.div
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                className="absolute top-full left-0 mt-4 w-full max-h-[450px] overflow-y-auto bg-white/98 dark:bg-slate-800/98 backdrop-blur-2xl border border-slate-100 dark:border-slate-700 rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] p-4 space-y-2 no-scrollbar z-50"
+                className="absolute top-full left-0 mt-4 w-full max-h-[450px] overflow-y-auto bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] p-4 space-y-2 no-scrollbar z-50"
               >
                 <div className="px-6 py-4">
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">All Infinity Products</span>

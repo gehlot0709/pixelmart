@@ -26,7 +26,7 @@ const AdminLayout = () => {
 
             {/* Sidebar */}
             <aside className={`
-                absolute lg:relative w-64 glass dark:glass-dark flex flex-col z-40 shadow-2xl h-full transition-transform duration-300 ease-in-out
+                absolute lg:relative w-64 bg-white dark:bg-slate-900 flex flex-col z-40 shadow-2xl h-full transition-transform duration-300 ease-in-out
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             `}>
                 <div className="p-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">

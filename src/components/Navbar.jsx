@@ -245,7 +245,7 @@ const Navbar = () => {
                     initial={{ opacity: 0, y: 15, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 mt-4 w-64 glass-dark rounded-[2rem] p-4 shadow-premium border border-white/10"
+                    className="absolute right-0 mt-4 w-64 bg-slate-950 rounded-[2rem] p-4 shadow-premium border border-white/10"
                   >
                     <div className="p-4 mb-2 border-b border-white/5">
                       <p className="text-sm font-black text-white truncate">{user.name}</p>
@@ -300,7 +300,7 @@ const Navbar = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: '100vh', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden fixed inset-0 top-0 w-full bg-dark/95 backdrop-blur-2xl z-[45] overflow-hidden flex flex-col"
+            className="lg:hidden fixed inset-0 top-0 w-full bg-slate-950 z-[45] overflow-hidden flex flex-col"
           >
             {/* Close Button Inside Mobile Menu */}
             <button
