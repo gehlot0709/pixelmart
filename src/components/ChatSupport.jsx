@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 
 const ChatSupport = () => {
     useEffect(() => {
-        const propertyId = '65b91a7c0ff74c6d328c7075';
-        const widgetId = '1hkplb89k';
+        const propertyId = '6985c55f3bf2001c328dbf1e';
+        const widgetId = '1jgp8m0bk';
 
         var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
         (function () {

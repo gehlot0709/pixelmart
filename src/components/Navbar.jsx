@@ -24,18 +24,11 @@ import API_URL from "../config";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-import { useTranslation } from "react-i18next";
-
 const Navbar = () => {
-  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { cart } = useCart();
   const { cartItems } = cart;
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'hi' : 'en';
-    i18n.changeLanguage(newLang);
-  };
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -143,7 +136,7 @@ const Navbar = () => {
             onMouseLeave={onLinkLeave}
             className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/")}`}
           >
-            {t('home')}
+            Home
           </Link>
 
           <div className="relative group/nav">
@@ -155,7 +148,7 @@ const Navbar = () => {
               onMouseLeave={onLinkLeave}
               className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/shop")}`}
             >
-              {t('shop')} <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'shop' ? 'rotate-180' : ''}`} />
+              Shop <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'shop' ? 'rotate-180' : ''}`} />
             </button>
             {/* Simple Shop Dropdown - Mockup Match */}
             <AnimatePresence>
@@ -183,7 +176,7 @@ const Navbar = () => {
                         to="/shop"
                         className="flex items-center gap-3 text-primary font-black text-xs uppercase tracking-[0.2em] group"
                       >
-                        {t('explore_all_offers')} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                        Explore All <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </li>
                   </ul>
@@ -200,7 +193,7 @@ const Navbar = () => {
             onMouseLeave={onLinkLeave}
             className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium flex items-center gap-2 ${isActive("/offers")}`}
           >
-            <Sparkles size={16} className="text-amber-400" /> {t('exclusive_offers')}
+            <Sparkles size={16} className="text-amber-400" /> Exclusive Offers
           </Link>
           <Link
             to="/contact"
@@ -208,18 +201,12 @@ const Navbar = () => {
             onMouseLeave={onLinkLeave}
             className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/contact")}`}
           >
-            {t('contact')}
+            Support
           </Link>
         </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-3 lg:gap-5 relative z-10">
-          <button
-            onClick={toggleLanguage}
-            className="p-3 rounded-2xl bg-white/5 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-premium border border-white/5"
-          >
-            {i18n.language === 'en' ? 'HI' : 'EN'}
-          </button>
 
           <div className="relative group">
             <button

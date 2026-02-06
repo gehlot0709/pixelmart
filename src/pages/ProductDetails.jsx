@@ -8,10 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
 import ProductCard from '../components/ProductCard';
 import { Star, ShoppingCart, Truck, ShieldCheck, RotateCcw, Wallet, Zap, ChevronDown, MapPin } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-
 const ProductDetails = () => {
-    const { t } = useTranslation();
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
@@ -277,7 +274,7 @@ const ProductDetails = () => {
                         {/* Delivery Estimate */}
                         <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800">
                             <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                                <MapPin size={14} className="text-primary" /> {t('estimated_delivery')}
+                                <MapPin size={14} className="text-primary" /> Estimated Delivery
                             </h4>
                             <div className="flex gap-3">
                                 <input
@@ -285,7 +282,7 @@ const ProductDetails = () => {
                                     maxLength={6}
                                     value={pincode}
                                     onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
-                                    placeholder={t('enter_pincode')}
+                                    placeholder="Enter Pincode"
                                     className="flex-1 bg-white dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/20 transition-premium"
                                 />
                                 <button
@@ -293,7 +290,7 @@ const ProductDetails = () => {
                                     disabled={checkingDelivery || pincode.length !== 6}
                                     className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-premium disabled:opacity-50"
                                 >
-                                    {checkingDelivery ? '...' : t('check')}
+                                    {checkingDelivery ? '...' : 'Check'}
                                 </button>
                             </div>
                             {deliveryEstimate && (
@@ -446,7 +443,7 @@ const ProductDetails = () => {
                     <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                         <div className="max-w-xl">
                             <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-none mb-4">
-                                {t('you_may_also_like')}
+                                You May Also Like
                             </h2>
                         </div>
                     </div>
