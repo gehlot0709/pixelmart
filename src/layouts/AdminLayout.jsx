@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Package, ShoppingBag, LogOut, Home } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, LogOut, Home, Tag, Users } from 'lucide-react';
 
 const AdminLayout = () => {
     const { logout } = useAuth();
@@ -29,6 +29,12 @@ const AdminLayout = () => {
                     </Link>
                     <Link to="/admin/orders" className="flex items-center p-3 rounded-xl hover:bg-primary/10 hover:text-primary transition">
                         <ShoppingBag className="mr-3" /> Orders
+                    </Link>
+                    <Link to="/admin/users" className="flex items-center p-3 rounded-xl hover:bg-primary/10 hover:text-primary transition">
+                        <LayoutDashboard className="mr-3" /> Users
+                    </Link>
+                    <Link to="/admin/categories" className="flex items-center p-3 rounded-xl hover:bg-primary/10 hover:text-primary transition">
+                        <Tag className="mr-3" /> Categories
                     </Link>
                     <Link to="/" className="flex items-center p-3 rounded-xl hover:bg-primary/10 hover:text-primary transition">
                         <Home className="mr-3" /> View Site

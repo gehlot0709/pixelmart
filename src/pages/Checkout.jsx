@@ -12,6 +12,7 @@ import { Zap, ShieldCheck, Truck, ArrowRight } from 'lucide-react';
 
 const Checkout = () => {
     const { cart, saveShippingAddress, clearCart } = useCart();
+    const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
 
     const [name, setName] = useState(cart.shippingAddress?.name || '');
@@ -29,6 +30,13 @@ const Checkout = () => {
     const [uploading, setUploading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (!authLoading && !user) {
+            alert('Please login to continue to checkout');
+            navigate('/login?redirect=checkout');
+        }
+    }, [user, authLoading, navigate]);
 
     const itemsPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
     const totalPrice = itemsPrice;
@@ -61,16 +69,76 @@ const Checkout = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         setError('');
-        saveShippingAddress({ name, email, houseNumber, flatSociety, address, city, state, postalCode, country, phone });
 
-        if (!name || !email || !houseNumber || !flatSociety || !address || !city || !state || !postalCode || !country || !phone) {
-            setError('Please fill in all shipping fields correctly.');
-            window.scrollTo(0, 0);
+        // 1. Name Validation
+        if (!name || name.trim().length < 3) {
+            setError('❌ Full Name must be at least 3 characters long.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
+        // 2. Email Validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            setError('❌ Please enter a valid Email Address.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // 3. Phone Validation (10 digits)
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phone || !phoneRegex.test(phone)) {
+            setError('❌ Please enter a valid 10-digit Mobile Number.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // 4. Address Details Validation
+        if (!houseNumber || houseNumber.trim() === '') {
+            setError('❌ Home/House Number is required.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!flatSociety || flatSociety.trim() === '') {
+            setError('❌ Society or Apartment Name is required.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!address || address.trim() === '') {
+            setError('❌ Area/Street details are required.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!city || city.trim() === '') {
+            setError('❌ City name is required.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!state || state.trim() === '') {
+            setError('❌ State selection is required.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // 5. Pin Code Validation (6 digits)
+        const pinRegex = /^[0-9]{6}$/;
+        if (!postalCode || !pinRegex.test(postalCode)) {
+            setError('❌ Please enter a valid 6-digit Pin Code.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // 6. Landmark/Country
+        if (!country || country.trim() === '') {
+            setError('❌ Landmark/Location details are required.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        saveShippingAddress({ name, email, houseNumber, flatSociety, address, city, state, postalCode, country, phone });
+
         if (paymentMethod === 'QR Code' && !paymentProof) {
-            setError('Please upload the payment screenshot.');
+            setError('❌ Please upload the payment screenshot.');
             return;
         }
 
@@ -102,6 +170,7 @@ const Checkout = () => {
         } catch (error) {
             console.error("Order Submission Failure:", error.response?.data || error.message);
             setError(error.response?.data?.error || error.response?.data?.message || 'Order Failed');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } finally {
             setIsProcessing(false);
         }
