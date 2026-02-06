@@ -20,10 +20,22 @@ import axios from "axios";
 import { useCart } from "../context/CartContext";
 import API_URL from "../config";
 
+// GSAP
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+import { useTranslation } from "react-i18next";
+
 const Navbar = () => {
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { cart } = useCart();
   const { cartItems } = cart;
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'hi' : 'en';
+    i18n.changeLanguage(newLang);
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -35,6 +47,28 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const navRef = useRef(null);
+
+  const { contextSafe } = useGSAP({ scope: navRef });
+
+  const onLinkEnter = contextSafe((e) => {
+    gsap.to(e.currentTarget, {
+      x: 5,
+      y: -2,
+      duration: 0.3,
+      ease: "power2.out",
+      color: "#6366f1" // primary color
+    });
+  });
+
+  const onLinkLeave = contextSafe((e) => {
+    gsap.to(e.currentTarget, {
+      x: 0,
+      y: 0,
+      duration: 0.3,
+      ease: "power2.inOut",
+      color: "" // revert to css
+    });
+  });
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -103,16 +137,26 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-12">
-          <Link to="/" className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/")}`}>Home</Link>
+          <Link
+            to="/"
+            onMouseEnter={onLinkEnter}
+            onMouseLeave={onLinkLeave}
+            className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/")}`}
+          >
+            {t('home')}
+          </Link>
 
           <div className="relative group/nav">
             <button
-              onMouseEnter={() => setActiveDropdown('shop')}
+              onMouseEnter={(e) => {
+                setActiveDropdown('shop');
+                onLinkEnter(e);
+              }}
+              onMouseLeave={onLinkLeave}
               className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/shop")}`}
             >
-              Shop <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'shop' ? 'rotate-180' : ''}`} />
+              {t('shop')} <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'shop' ? 'rotate-180' : ''}`} />
             </button>
-
             {/* Simple Shop Dropdown - Mockup Match */}
             <AnimatePresence>
               {activeDropdown === 'shop' && (
@@ -139,7 +183,7 @@ const Navbar = () => {
                         to="/shop"
                         className="flex items-center gap-3 text-primary font-black text-xs uppercase tracking-[0.2em] group"
                       >
-                        All Products <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                        {t('explore_all_offers')} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </li>
                   </ul>
@@ -150,14 +194,33 @@ const Navbar = () => {
             </AnimatePresence>
           </div>
 
-          <Link to="/offers" className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium flex items-center gap-2 ${isActive("/offers")}`}>
-            <Sparkles size={16} className="text-amber-400" /> Offers
+          <Link
+            to="/offers"
+            onMouseEnter={onLinkEnter}
+            onMouseLeave={onLinkLeave}
+            className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium flex items-center gap-2 ${isActive("/offers")}`}
+          >
+            <Sparkles size={16} className="text-amber-400" /> {t('exclusive_offers')}
           </Link>
-          <Link to="/contact" className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/contact")}`}>Support</Link>
+          <Link
+            to="/contact"
+            onMouseEnter={onLinkEnter}
+            onMouseLeave={onLinkLeave}
+            className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/contact")}`}
+          >
+            {t('contact')}
+          </Link>
         </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-3 lg:gap-5 relative z-10">
+          <button
+            onClick={toggleLanguage}
+            className="p-3 rounded-2xl bg-white/5 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-premium border border-white/5"
+          >
+            {i18n.language === 'en' ? 'HI' : 'EN'}
+          </button>
+
           <div className="relative group">
             <button
               onClick={() => setShowSearch(!showSearch)}
@@ -252,6 +315,14 @@ const Navbar = () => {
             exit={{ height: 0, opacity: 0 }}
             className="lg:hidden fixed inset-0 top-0 w-full bg-dark/95 backdrop-blur-2xl z-[45] overflow-hidden flex flex-col"
           >
+            {/* Close Button Inside Mobile Menu */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-6 right-6 p-4 text-white hover:text-primary transition-premium z-[50]"
+            >
+              <X size={32} />
+            </button>
+
             <div className="p-8 pb-4 pt-24 flex flex-col gap-8 flex-1 overflow-y-auto">
               <Link to="/" className="text-4xl font-black tracking-tighter hover:text-primary transition-premium border-b border-white/5 pb-4">Home</Link>
 
@@ -303,9 +374,10 @@ const Navbar = () => {
       <AnimatePresence>
         {showSearch && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0, y: -20 }}
+            animate={{ height: "auto", opacity: 1, y: 0 }}
+            exit={{ height: 0, opacity: 0, y: -20 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
             className="absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl overflow-hidden"
           >
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">

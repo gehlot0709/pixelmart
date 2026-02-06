@@ -1,27 +1,117 @@
 
-import { motion } from 'framer-motion';
-import { ShoppingCart, Sparkles, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import API_URL from '../config';
 import { useCart } from '../context/CartContext';
+
+// GSAP
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
     const [isWishlisted, setIsWishlisted] = useState(false);
+    const cardRef = useRef();
+    const imageRef = useRef();
+    const wishlistBtnRef = useRef();
+
+    const { contextSafe } = useGSAP({ scope: cardRef });
+
+    const onMouseEnter = contextSafe(() => {
+        gsap.to(cardRef.current, {
+            y: -12,
+            duration: 0.5,
+            ease: "power2.out",
+            boxShadow: "0 30px 60px -12px rgba(0, 0, 0, 0.2)"
+        });
+        gsap.to(imageRef.current, {
+            scale: 1.15,
+            duration: 0.8,
+            ease: "power3.out"
+        });
+    });
+
+    const onMouseMove = contextSafe((e) => {
+        const { clientX, clientY } = e;
+        const rect = cardRef.current.getBoundingClientRect();
+
+        const x = (clientX - rect.left) / rect.width - 0.5;
+        const y = (clientY - rect.top) / rect.height - 0.5;
+
+        gsap.to(cardRef.current, {
+            rotateY: x * 10,
+            rotateX: -y * 10,
+            duration: 0.4,
+            ease: "power2.out",
+            transformPerspective: 1000
+        });
+    });
+
+    const onMouseLeave = contextSafe(() => {
+        gsap.to(cardRef.current, {
+            y: 0,
+            rotateY: 0,
+            rotateX: 0,
+            duration: 0.6,
+            ease: "power4.inOut",
+            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+        });
+        gsap.to(imageRef.current, {
+            scale: 1,
+            duration: 0.8,
+            ease: "power3.inOut"
+        });
+    });
+
+    const onWishlistEnter = contextSafe(() => {
+        gsap.to(wishlistBtnRef.current, {
+            scale: 1.3,
+            rotate: 15,
+            duration: 0.4,
+            ease: "back.out(2)"
+        });
+    });
+
+    const onWishlistLeave = contextSafe(() => {
+        gsap.to(wishlistBtnRef.current, {
+            scale: 1,
+            rotate: 0,
+            x: 0,
+            y: 0,
+            duration: 0.5,
+            ease: "elastic.out(1, 0.3)"
+        });
+    });
+
+    const onWishlistMove = contextSafe((e) => {
+        const btn = wishlistBtnRef.current;
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        gsap.to(btn, {
+            x: x * 0.4,
+            y: y * 0.4,
+            duration: 0.3,
+            ease: "power2.out"
+        });
+    });
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -4 }}
+        <div
+            ref={cardRef}
+            onMouseEnter={onMouseEnter}
+            onMouseMove={onMouseMove}
+            onMouseLeave={onMouseLeave}
             className="group relative bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden transition-premium shadow-sm hover:shadow-xl h-full flex flex-col"
+            style={{ willChange: "transform" }}
         >
             <Link to={`/product/${product._id}`} className="block flex-1 flex flex-col">
                 {/* Image Container */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-800 rounded-[2rem] m-2">
                     <img
+                        ref={imageRef}
                         src={(() => {
                             const img = product.mainImage || (product.images && product.images[0]);
                             if (!img) return 'https://via.placeholder.com/300x400';
@@ -32,11 +122,15 @@ const ProductCard = ({ product }) => {
                             return path.startsWith('/') ? path : `${API_URL}${path}`;
                         })()}
                         alt={product.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-premium duration-700"
+                        className="w-full h-full object-cover transition-premium duration-700"
                     />
 
                     {/* Wishlist Button */}
                     <button
+                        ref={wishlistBtnRef}
+                        onMouseEnter={onWishlistEnter}
+                        onMouseMove={onWishlistMove}
+                        onMouseLeave={onWishlistLeave}
                         onClick={(e) => {
                             e.preventDefault();
                             setIsWishlisted(!isWishlisted);
@@ -90,7 +184,7 @@ const ProductCard = ({ product }) => {
                     </div>
                 </div>
             </Link>
-        </motion.div>
+        </div>
     );
 };
 

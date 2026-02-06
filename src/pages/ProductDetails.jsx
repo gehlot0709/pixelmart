@@ -6,9 +6,12 @@ import { useCart } from '../context/CartContext';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
-import { Star, ShoppingCart, Truck, ShieldCheck, RotateCcw, Wallet, Zap, ChevronDown } from 'lucide-react';
+import ProductCard from '../components/ProductCard';
+import { Star, ShoppingCart, Truck, ShieldCheck, RotateCcw, Wallet, Zap, ChevronDown, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ProductDetails = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
@@ -18,24 +21,48 @@ const ProductDetails = () => {
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [activeTab, setActiveTab] = useState('highlights');
+    const [recommendedProducts, setRecommendedProducts] = useState([]);
+    const [pincode, setPincode] = useState('');
+    const [deliveryEstimate, setDeliveryEstimate] = useState('');
+    const [checkingDelivery, setCheckingDelivery] = useState(false);
 
     const { addToCart } = useCart();
 
     useEffect(() => {
-        const fetchProduct = async () => {
+        const fetchProductData = async () => {
+            setLoading(true);
             try {
                 const { data } = await axios.get(`${API_URL}/api/products/${id}`);
                 setProduct(data);
-                setMainImage(data.mainImage || data.images[0]);
+                setMainImage(data.mainImage || data.images?.[0] || '');
                 if (data.sizes?.length > 0) setSelectedSize(data.sizes[0]);
                 if (data.colors?.length > 0) setSelectedColor(data.colors[0]);
+
+                // Fetch recommendations
+                console.log(`Fetching recommendations for: ${id}`);
+                const recRes = await axios.get(`${API_URL}/api/products/recommend/${id}`);
+                console.log("Recommendations received:", recRes.data);
+                setRecommendedProducts(recRes.data);
             } catch (error) {
-                console.error(error);
+                console.error("Error in ProductDetails fetch:", error);
             }
             setLoading(false);
         };
-        fetchProduct();
+        fetchProductData();
+        window.scrollTo(0, 0);
     }, [id]);
+
+    const handleCheckDelivery = async () => {
+        if (!pincode || pincode.length !== 6) return;
+        setCheckingDelivery(true);
+        try {
+            const { data } = await axios.post(`${API_URL}/api/products/estimate-delivery`, { pincode });
+            setDeliveryEstimate(data.estimate);
+        } catch (error) {
+            setDeliveryEstimate("Error checking delivery");
+        }
+        setCheckingDelivery(false);
+    };
 
     const handleAddToCart = () => {
         addToCart(product, qty, selectedSize, selectedColor);
@@ -246,23 +273,58 @@ const ProductDetails = () => {
                         </div>
                     </div>
 
-                    <div className="mt-8 grid grid-cols-2 gap-y-6 gap-x-12">
-                        <div className="flex gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-primary group transition-premium hover:bg-primary/5">
-                                <Truck size={24} className="transition-premium group-hover:scale-110" />
+                    <div className="mt-8 space-y-6">
+                        {/* Delivery Estimate */}
+                        <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                                <MapPin size={14} className="text-primary" /> {t('estimated_delivery')}
+                            </h4>
+                            <div className="flex gap-3">
+                                <input
+                                    type="text"
+                                    maxLength={6}
+                                    value={pincode}
+                                    onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
+                                    placeholder={t('enter_pincode')}
+                                    className="flex-1 bg-white dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/20 transition-premium"
+                                />
+                                <button
+                                    onClick={handleCheckDelivery}
+                                    disabled={checkingDelivery || pincode.length !== 6}
+                                    className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-premium disabled:opacity-50"
+                                >
+                                    {checkingDelivery ? '...' : t('check')}
+                                </button>
                             </div>
-                            <div>
-                                <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-0.5">Shipping</p>
-                                <p className="text-sm font-bold">{product.deliveryTime}</p>
-                            </div>
+                            {deliveryEstimate && (
+                                <motion.p
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="mt-4 text-sm font-bold text-primary animate-pulse"
+                                >
+                                    {deliveryEstimate}
+                                </motion.p>
+                            )}
                         </div>
-                        <div className="flex gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-secondary group transition-premium hover:bg-secondary/5">
-                                <ShieldCheck size={24} className="transition-premium group-hover:scale-110" />
+
+                        <div className="grid grid-cols-2 gap-y-6 gap-x-12">
+                            <div className="flex gap-4">
+                                <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-primary group transition-premium hover:bg-primary/5">
+                                    <Truck size={24} className="transition-premium group-hover:scale-110" />
+                                </div>
+                                <div>
+                                    <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-0.5">Shipping</p>
+                                    <p className="text-sm font-bold">{product.deliveryTime}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-0.5">Warranty</p>
-                                <p className="text-sm font-bold">PixelMart Assured</p>
+                            <div className="flex gap-4">
+                                <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-secondary group transition-premium hover:bg-secondary/5">
+                                    <ShieldCheck size={24} className="transition-premium group-hover:scale-110" />
+                                </div>
+                                <div>
+                                    <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-0.5">Warranty</p>
+                                    <p className="text-sm font-bold">PixelMart Assured</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -377,6 +439,24 @@ const ProductDetails = () => {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Recommendations Section */}
+            {recommendedProducts.length > 0 && (
+                <div className="mt-24 md:mt-32">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                        <div className="max-w-xl">
+                            <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-none mb-4">
+                                {t('you_may_also_like')}
+                            </h2>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                        {recommendedProducts.map((p) => (
+                            <ProductCard key={p._id} product={p} />
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
