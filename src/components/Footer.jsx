@@ -63,7 +63,7 @@ const Footer = () => {
                                 </div>
                                 <div className="flex flex-col">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Email</p>
-                                    <p className="text-sm font-bold">hello@pixelmart.io</p>
+                                    <p className="text-sm font-bold">pixelmart0206@gmail.com</p>
                                 </div>
                             </div>
                         </div>

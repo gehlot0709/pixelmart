@@ -273,7 +273,7 @@ const Checkout = () => {
                                 className="glass dark:glass-dark p-10 rounded-[3rem] border border-white/20 text-center"
                             >
                                 <div className="max-w-[200px] mx-auto p-4 bg-white rounded-3xl mb-8 shadow-2xl">
-                                    <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=pixelexpress@idbi&pn=PixelMart&am=${totalPrice}&cu=INR`} alt="Payment QR" className="w-full h-full object-contain" />
+                                    <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=pixelmart0206@okaxis&pn=PixelMart&am=${totalPrice}&cu=INR`} alt="Payment QR" className="w-full h-full object-contain" />
                                 </div>
                                 <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Scan to Transfer ₹{totalPrice}</p>
 

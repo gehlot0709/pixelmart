@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2, Plus, AlertTriangle, Search } from 'lucide-react';
 
 import Button from '../../components/Button';
 import API_URL from '../../config';
@@ -90,8 +90,8 @@ const AdminProductList = () => {
                                 <td className="p-4 font-bold">₹{product.price}</td>
                                 <td className="p-4">
                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${product.stock <= 0 ? 'bg-red-100 text-red-600' :
-                                            product.stock <= 5 ? 'bg-orange-100 text-orange-600' :
-                                                'bg-green-100 text-green-600'
+                                        product.stock <= 5 ? 'bg-orange-100 text-orange-600' :
+                                            'bg-green-100 text-green-600'
                                         }`}>
                                         {product.stock}
                                     </span>
