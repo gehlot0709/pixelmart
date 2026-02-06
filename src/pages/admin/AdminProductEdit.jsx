@@ -160,7 +160,7 @@ const AdminProductEdit = () => {
 
             <form onSubmit={submitHandler} className="space-y-6">
                 <Input label="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input label="Price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
                     <Input label="Stock" type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />
                 </div>
@@ -175,7 +175,7 @@ const AdminProductEdit = () => {
                     />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Category</label>
                         <select

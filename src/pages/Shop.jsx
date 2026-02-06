@@ -246,7 +246,7 @@ const Shop = () => {
                 <button onClick={() => updateFilters({ category: "", keyword: "" })} className="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-black rounded-[2.5rem] font-black uppercase tracking-[0.2em] text-sm shadow-2xl hover:scale-110 active:scale-95 transition-all">Reset All Filters</button>
               </motion.div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 transition-premium">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 transition-premium">
                 {products.map((product, idx) => (
                   <motion.div
                     key={product._id}

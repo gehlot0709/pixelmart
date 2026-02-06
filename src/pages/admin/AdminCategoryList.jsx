@@ -84,7 +84,7 @@ const AdminCategoryList = () => {
                 </div>
 
                 {/* List */}
-                <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-xl h-fit">
+                <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-xl h-fit overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-slate-100 dark:bg-slate-700">
                             <tr>

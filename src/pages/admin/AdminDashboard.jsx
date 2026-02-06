@@ -35,7 +35,7 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold">Dashboard</h1>
 
             {/* Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="glass dark:glass-dark p-6 rounded-3xl flex items-center space-x-4">
                     <div className="p-4 bg-green-100 text-green-600 rounded-full">
                         <DollarSign size={32} />
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
                     <div>
                         <p className="text-slate-500">Low Stock</p>
                         <h3 className="text-2xl font-bold text-red-500">
-                            {stats.topProducts.filter(p => p.stock <= 5).length || 0}
+                            {stats.lowStockCount || 0}
                         </h3>
                     </div>
                 </div>
