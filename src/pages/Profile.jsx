@@ -36,7 +36,7 @@ const Profile = () => {
       const safeApiUrl = API_URL || "https://pixelmartserver.vercel.app";
       const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
       await axios.put(`${safeApiUrl}/api/auth/change-password`, { currentPassword, newPassword }, config);
-      setPassMessage('Identity Cipher Updated');
+      setPassMessage('Password Updated');
       alert('Password changed successfully');
       setCurrentPassword('');
       setNewPassword('');
@@ -75,7 +75,7 @@ const Profile = () => {
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-48 animate-pulse">
       <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
-      <p className="text-sm font-black text-slate-400 uppercase tracking-widest">Synchronizing Nexus...</p>
+      <p className="text-sm font-black text-slate-400 uppercase tracking-widest">Loading Profile...</p>
     </div>
   );
 
@@ -83,16 +83,15 @@ const Profile = () => {
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 animate-fade-in">
       <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
         <div className="max-w-xl">
-          <span className="text-primary font-black uppercase tracking-[0.5em] text-[10px] mb-4 block underline decoration-primary/30 decoration-4 underline-offset-8">Private Domain</span>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
-            Identity <span className="text-gradient italic">Nexus</span>
+            My <span className="text-gradient italic">Profile</span>
           </h1>
         </div>
         <button
           onClick={() => setShowPassForm(!showPassForm)}
           className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl transition-premium hover:-translate-y-1 active:scale-95"
         >
-          <Key size={18} /> {showPassForm ? 'Close Vault' : 'Secure Cipher'}
+          <Key size={18} /> {showPassForm ? 'Close Vault' : 'Change Password'}
         </button>
       </div>
 
@@ -104,15 +103,15 @@ const Profile = () => {
             exit={{ opacity: 0, height: 0, y: -20 }}
             className="glass dark:glass-dark p-10 rounded-[3rem] border border-white/20 mb-16 overflow-hidden"
           >
-            <h2 className="text-2xl font-black mb-8 uppercase italic tracking-tight">Identity Cipher Update</h2>
+            <h2 className="text-2xl font-black mb-8 uppercase italic tracking-tight">Change Password</h2>
             {passError && <p className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl mb-6 font-bold text-sm">{passError}</p>}
             {passMessage && <p className="p-4 bg-green-500/10 border border-green-500/20 text-green-500 rounded-xl mb-6 font-bold text-sm uppercase tracking-widest">{passMessage}</p>}
             <form onSubmit={handleChangePassword} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Input label="Current Master Key" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
-              <Input label="New Master Key" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
-              <Input label="Confirm New Key" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+              <Input label="Current Password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
+              <Input label="New Password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+              <Input label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
               <div className="md:col-span-3">
-                <Button type="submit" disabled={passLoading}>{passLoading ? 'Encrypting...' : 'Seal New Cipher'}</Button>
+                <Button type="submit" disabled={passLoading}>{passLoading ? 'Updating...' : 'Update Password'}</Button>
               </div>
             </form>
           </motion.div>
@@ -125,8 +124,8 @@ const Profile = () => {
         {orders.length === 0 ? (
           <div className="text-center py-32 glass dark:glass-dark rounded-[4rem] border-4 border-dashed border-slate-100 dark:border-slate-800">
             <Clock size={48} className="mx-auto text-slate-200 mb-6" />
-            <h2 className="text-2xl font-black text-slate-300 uppercase tracking-widest">No Legends Written Yet.</h2>
-            <Link to="/shop" className="text-primary font-black uppercase tracking-widest text-xs mt-4 inline-block hover:underline underline-offset-4">Begin Your Journey →</Link>
+            <h2 className="text-2xl font-black text-slate-300 uppercase tracking-widest">No Orders Found.</h2>
+            <Link to="/shop" className="text-primary font-black uppercase tracking-widest text-xs mt-4 inline-block hover:underline underline-offset-4">Browse Products →</Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -146,7 +145,7 @@ const Profile = () => {
                       <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-xl ${order.isDelivered ? 'bg-green-500 text-white shadow-green-500/20' :
                         order.isPaid ? 'bg-blue-500 text-white shadow-blue-500/20' : 'bg-amber-500 text-white shadow-amber-500/20'
                         }`}>
-                        {order.isDelivered ? 'Manifested' : order.isPaid ? 'In Flux' : 'Awaiting Seal'}
+                        {order.isDelivered ? 'Delivered' : order.isPaid ? 'Processing' : 'Pending'}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">

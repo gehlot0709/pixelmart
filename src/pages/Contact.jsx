@@ -85,12 +85,12 @@ const Contact = () => {
                                 <Mail size={40} />
                             </div>
                             <h2 className="text-4xl font-black uppercase tracking-tighter text-white">Message Sent</h2>
-                            <p className="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] max-w-xs mx-auto">We've received your signal. We'll get back to you shortly.</p>
+                            <p className="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] max-w-xs mx-auto">We've received your message. We'll get back to you shortly.</p>
                             <button
                                 onClick={() => setSent(false)}
                                 className="px-10 py-5 bg-white text-dark rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl hover:-translate-y-2 transition-premium active:scale-95"
                             >
-                                New Input
+                                Send Another Message
                             </button>
                         </div>
                     ) : (

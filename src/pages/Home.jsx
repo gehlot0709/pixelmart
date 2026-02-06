@@ -95,7 +95,7 @@ const Home = () => {
                             );
                         }) : (
                             <div className="w-full py-20 flex justify-center animate-pulse">
-                                <p className="text-slate-400 font-bold tracking-widest uppercase italic">Preparing Collections...</p>
+                                <p className="text-slate-400 font-bold tracking-widest uppercase italic">Loading Collections...</p>
                             </div>
                         )}
                     </div>

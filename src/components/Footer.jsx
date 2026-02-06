@@ -14,7 +14,7 @@ const Footer = () => {
                     <div className="lg:col-span-4 space-y-8">
                         <div>
                             <h2 className="text-4xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-6 tracking-tighter">
-                                PixelMart.
+                                PixelMart
                             </h2>
                             <p className="text-slate-400 text-sm leading-relaxed max-w-xs font-medium italic opacity-80">
                                 "The intersection of cutting-edge technology and timeless elegance. We craft experiences, not just apparel."
@@ -73,12 +73,12 @@ const Footer = () => {
                 {/* Bottom Bar */}
                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">
-                        &copy; {new Date().getFullYear()} PixelMart Laboratory. All Rights Reserved.
+                        &copy; {new Date().getFullYear()} PixelMart. All Rights Reserved.
                     </p>
                     <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
-                        <a href="#" className="hover:text-white transition-premium">Privacy Protocol</a>
-                        <a href="#" className="hover:text-white transition-premium">Terms of Origin</a>
-                        <a href="#" className="hover:text-white transition-premium">Compliance</a>
+                        <a href="#" className="hover:text-white transition-premium">Privacy Policy</a>
+                        <a href="#" className="hover:text-white transition-premium">Terms of Service</a>
+                        <a href="#" className="hover:text-white transition-premium">Returns & Refunds</a>
                     </div>
                 </div>
             </div>

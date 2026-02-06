@@ -30,7 +30,7 @@ const Cart = () => {
                     </h1>
                 </div>
                 <p className="text-slate-400 font-bold italic">
-                    {cart.cartItems.length} {cart.cartItems.length === 1 ? 'Masterpiece' : 'Masterpieces'} Reserved
+                    {cart.cartItems.length} {cart.cartItems.length === 1 ? 'Product' : 'Products'} Reserved
                 </p>
             </div>
 
@@ -43,7 +43,7 @@ const Cart = () => {
                     <div className="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-8 text-slate-300">
                         <ShoppingBag size={48} />
                     </div>
-                    <h2 className="text-3xl font-black text-slate-300 mb-6">YOUR BAG IS BREATHING...</h2>
+                    <h2 className="text-3xl font-black text-slate-300 mb-6">Your cart is empty</h2>
                     <Link to="/shop">
                         <button className="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-black rounded-[2rem] font-black uppercase tracking-widest text-sm shadow-2xl hover:scale-110 active:scale-95 transition-premium">
                             Start Collecting
