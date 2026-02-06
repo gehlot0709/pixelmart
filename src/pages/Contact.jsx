@@ -1,27 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, LogIn } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import API_URL from '../config';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import { useAuth } from '../context/AuthContext';
 
 const Contact = () => {
+    const { user } = useAuth();
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [sending, setSending] = useState(false);
     const [sent, setSent] = useState(false);
 
+    useEffect(() => {
+        if (user) {
+            setEmail(user.email);
+        }
+    }, [user]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!user) return;
+
         setSending(true);
         try {
-            await axios.post(`${API_URL}/api/contact`, { email, message });
+            const token = localStorage.getItem('token');
+            await axios.post(`${API_URL}/api/contact`,
+                { email, message },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             setSent(true);
+            setMessage('');
         } catch (error) {
-            alert('Message Sent!');
-            setSent(true);
+            alert(error.response?.data?.message || 'Failed to send message.');
         }
         setSending(false);
     };
@@ -52,7 +68,18 @@ const Contact = () => {
                 >
                     <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 blur-[100px] pointer-events-none" />
 
-                    {sent ? (
+                    {!user ? (
+                        <div className="text-center py-20 space-y-8">
+                            <div className="w-24 h-24 bg-white/5 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-8">
+                                <LogIn size={40} />
+                            </div>
+                            <h2 className="text-4xl font-black uppercase tracking-tighter text-white">Login Required</h2>
+                            <p className="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] max-w-xs mx-auto">Please login to your account to send us a message.</p>
+                            <Link to="/login" className="inline-block px-10 py-5 bg-white text-dark rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl hover:-translate-y-2 transition-premium active:scale-95">
+                                Login Now
+                            </Link>
+                        </div>
+                    ) : sent ? (
                         <div className="text-center py-20 space-y-8">
                             <div className="w-24 h-24 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-8 animate-float">
                                 <Mail size={40} />
