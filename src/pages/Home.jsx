@@ -108,10 +108,10 @@ const Home = () => {
                     <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6">
                         <div className="max-w-xl">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-[0.2em] mb-4 border border-secondary/20">
-                                <Sparkles size={12} /> Seasonal Drop
+                                <Sparkles size={12} /> Special Selection
                             </div>
                             <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-none mb-4">
-                                Most Wanted <span className="text-gradient italic">Infinity</span>
+                                Exclusive <span className="text-gradient italic">Offers</span>
                             </h2>
                         </div>
                         <Link to="/offers" className="w-full md:w-auto">

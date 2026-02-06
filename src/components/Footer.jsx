@@ -53,36 +53,17 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div className="lg:col-span-2 space-y-8">
-                        <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Service</h3>
-                        <ul className="space-y-4 text-slate-400 text-sm font-bold">
-                            <li><Link to="/profile" className="hover:text-white transition-premium">Nexus Account</Link></li>
-                            <li><a href="#" className="hover:text-white transition-premium">Pulse Tracking</a></li>
-                            <li><a href="#" className="hover:text-white transition-premium">Exchanges</a></li>
-                            <li><Link to="/contact" className="hover:text-white transition-premium">Concierge</Link></li>
-                        </ul>
-                    </div>
-
-                    {/* Contact & Newsletter */}
+                    {/* Direct Nexus (Moved up to fill space) */}
                     <div className="lg:col-span-4 space-y-8">
-                        <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Direct Nexus</h3>
+                        <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Support Hub</h3>
                         <div className="space-y-6">
                             <div className="flex items-center gap-4 group">
                                 <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-primary group-hover:bg-primary group-hover:text-white transition-premium">
                                     <Mail size={20} />
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Encrypted Mail</p>
+                                <div className="flex flex-col">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Email</p>
                                     <p className="text-sm font-bold">hello@pixelmart.io</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4 group">
-                                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-secondary group-hover:bg-secondary group-hover:text-white transition-premium">
-                                    <MapPin size={20} />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Physical Node</p>
-                                    <p className="text-sm font-bold">101 Digital Avenue, SL Valley, CA</p>
                                 </div>
                             </div>
                         </div>
