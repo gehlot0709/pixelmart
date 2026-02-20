@@ -123,11 +123,11 @@ const Home = () => {
                     <div className="flex flex-col items-center mb-16 text-center">
                         <span className="text-primary font-bold uppercase tracking-[0.4em] text-[10px] mb-4">Categories</span>
                         <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-slate-900">
-                            Shop by <span className="text-slate-400">Style</span>
+                            Shop by <span className="text-slate-700">Style</span>
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 mb-16">
                         {categories.filter(c => !c.parent).map((cat) => {
                             const categoryImages = {
                                 "Men": menImg,
@@ -161,6 +161,14 @@ const Home = () => {
                             );
                         })}
                     </div>
+
+                    <div className="flex justify-center">
+                        <Link to="/shop">
+                            <button className="px-12 py-5 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-widest text-[10px] shadow-2xl shadow-slate-900/10 hover:bg-primary transition-all active:scale-95 flex items-center gap-3 group">
+                                Explore All Products <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                            </button>
+                        </Link>
+                    </div>
                 </div>
             </section>
 
@@ -173,7 +181,7 @@ const Home = () => {
                                 <Sparkles size={12} /> Seasonal Drop
                             </div>
                             <h2 className="text-4xl md:text-7xl font-bold tracking-tighter leading-[0.9] text-slate-900 mb-6">
-                                Featured <span className="italic font-light text-slate-400">Offers</span>
+                                Featured <span className="italic font-light text-slate-700">Offers</span>
                             </h2>
                             <p className="text-slate-900 font-medium md:text-lg">
                                 Don't miss out on our limited-time deals on these premium selected items.

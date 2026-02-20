@@ -47,7 +47,7 @@ const ProductCard = memo(({ product }) => {
             {/* Wishlist Button */}
             <button
                 onClick={toggleWishlist}
-                className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-100 text-slate-400 hover:text-secondary hover:scale-110 transition-all opacity-0 group-hover:opacity-100 md:opacity-0"
+                className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-100 text-slate-600 hover:text-secondary hover:scale-110 transition-all opacity-0 group-hover:opacity-100 md:opacity-0"
             >
                 <Heart size={16} className={isWishlisted ? "fill-secondary text-secondary border-none" : ""} />
             </button>
@@ -100,7 +100,7 @@ const ProductCard = memo(({ product }) => {
                                 <span className="text-base md:text-xl font-bold text-slate-900 leading-none">
                                     ₹{product.salePrice.toLocaleString()}
                                 </span>
-                                <span className="text-[10px] md:text-xs text-slate-500 line-through mt-1">
+                                <span className="text-[10px] md:text-xs text-slate-700 line-through mt-1">
                                     ₹{product.price.toLocaleString()}
                                 </span>
                             </>

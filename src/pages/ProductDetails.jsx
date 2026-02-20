@@ -75,13 +75,13 @@ const ProductDetails = () => {
     if (loading) return (
         <div className="flex flex-col items-center justify-center py-48 animate-pulse">
             <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
-            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Loading Perfection...</p>
+            <p className="text-sm font-bold text-slate-600 uppercase tracking-widest">Loading Perfection...</p>
         </div>
     );
 
     if (!product) return (
         <div className="text-center py-48">
-            <h2 className="text-4xl font-bold text-slate-300 tracking-tighter mb-4">PRODUCT NOT FOUND</h2>
+            <h2 className="text-4xl font-bold text-slate-600 tracking-tighter mb-4">PRODUCT NOT FOUND</h2>
             <Button onClick={() => navigate('/shop')}>Back to Shop</Button>
         </div>
     );
@@ -169,7 +169,7 @@ const ProductDetails = () => {
                                 <div className="flex items-center gap-1 text-amber-400">
                                     <Star size={14} className="fill-current" />
                                     <span className="text-xs font-bold text-slate-900">{product.averageRating || '4.8'}</span>
-                                    <span className="text-xs font-bold text-slate-400 ml-1">({product.numOfReviews || '120'}+ Reviews)</span>
+                                    <span className="text-xs font-bold text-slate-600 ml-1">({product.numOfReviews || '120'}+ Reviews)</span>
                                 </div>
                             </div>
                             <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-slate-900 leading-[0.95] mb-6">
@@ -178,7 +178,7 @@ const ProductDetails = () => {
                             <div className="flex items-center gap-4">
                                 <span className="text-3xl md:text-4xl font-bold text-slate-900">₹{(product.salePrice || product.price).toLocaleString()}</span>
                                 {product.salePrice && product.price > product.salePrice && (
-                                    <span className="text-xl text-slate-400 line-through font-bold">₹{product.price.toLocaleString()}</span>
+                                    <span className="text-xl text-slate-600 line-through font-bold">₹{product.price.toLocaleString()}</span>
                                 )}
                             </div>
                         </div>
@@ -187,9 +187,9 @@ const ProductDetails = () => {
                         <div className="space-y-10 pb-10 border-b border-slate-100 mb-10">
                             {product.sizes?.length > 0 && (
                                 <div className="space-y-4">
-                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-slate-700">
                                         <span>Select Size</span>
-                                        <button className="underline decoration-slate-200">Size Guide</button>
+                                        <button className="underline decoration-slate-300">Size Guide</button>
                                     </div>
                                     <div className="flex flex-wrap gap-3">
                                         {product.sizes.map(size => (
@@ -212,7 +212,7 @@ const ProductDetails = () => {
                                         <span className="w-10 text-center font-bold">{qty}</span>
                                         <button onClick={() => setQty(q => Math.min(product.stock, q + 1))} className="w-10 h-10 flex items-center justify-center font-bold text-lg hover:bg-white rounded-xl transition-all">+</button>
                                     </div>
-                                    <p className="text-xs font-bold text-slate-400">
+                                    <p className="text-xs font-bold text-slate-600">
                                         {product.stock > 0 ? `${product.stock} pieces in stock` : 'Out of Stock'}
                                     </p>
                                 </div>
@@ -236,15 +236,14 @@ const ProductDetails = () => {
                             </div>
                         </div>
 
-                        {/* Features */}
                         <div className="grid grid-cols-2 gap-8">
                             <div className="flex gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-900"><Truck size={20} /></div>
-                                <div><p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">Shipping</p><p className="text-xs font-bold">Free over ₹1,999</p></div>
+                                <div><p className="text-[9px] font-bold uppercase tracking-widest text-slate-600 mb-0.5">Shipping</p><p className="text-xs font-bold">Free over ₹1,999</p></div>
                             </div>
                             <div className="flex gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-900"><RotateCcw size={20} /></div>
-                                <div><p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">Returns</p><p className="text-xs font-bold">14-day Window</p></div>
+                                <div><p className="text-[9px] font-bold uppercase tracking-widest text-slate-600 mb-0.5">Returns</p><p className="text-xs font-bold">14-day Window</p></div>
                             </div>
                         </div>
                     </div>
@@ -257,7 +256,7 @@ const ProductDetails = () => {
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`pb-6 text-xs font-bold uppercase tracking-[0.3em] transition-all relative whitespace-nowrap ${activeTab === tab ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`pb-6 text-xs font-bold uppercase tracking-[0.3em] transition-all relative whitespace-nowrap ${activeTab === tab ? 'text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}
                             >
                                 {tab}
                                 {activeTab === tab && <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-0.5 bg-slate-900" />}
@@ -283,7 +282,7 @@ const ProductDetails = () => {
                                 <motion.div key="d" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
                                     {details.map((d, i) => (
                                         <div key={i} className="flex justify-between py-4 border-b border-slate-100 last:border-0 md:last:border-b">
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{d.key}</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">{d.key}</span>
                                             <span className="text-xs font-bold text-slate-900">{d.value}</span>
                                         </div>
                                     ))}
@@ -314,7 +313,7 @@ const ProductDetails = () => {
                 {recommendedProducts.length > 0 && (
                     <div className="mt-40">
                         <div className="flex items-center justify-between mb-12">
-                            <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-slate-900">Recommended <span className="text-slate-400 italic font-light">for you</span></h2>
+                            <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-slate-900">Recommended <span className="text-slate-700 italic font-light">for you</span></h2>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10">
                             {recommendedProducts.slice(0, 4).map(p => <ProductCard key={p._id} product={p} />)}

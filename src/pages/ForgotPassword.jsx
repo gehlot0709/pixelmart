@@ -90,9 +90,9 @@ const ForgotPassword = () => {
         <div className="bg-white min-h-[90vh] flex flex-col justify-center py-12 px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-12">
                 <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 mb-4">
-                    Forgot <span className="text-slate-400 italic font-light">Password</span>
+                    Forgot <span className="text-slate-700 italic font-light">Password</span>
                 </h1>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600">
                     {step === 1 ? 'Reset your account password' : 'OTP Verification'}
                 </p>
             </div>
@@ -131,7 +131,7 @@ const ForgotPassword = () => {
                     ) : (
                         <form onSubmit={resetPasswordHandler} className="space-y-8">
                             <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
-                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">
                                     OTP Code sent to <span className="text-slate-900 font-black">{email}</span>
                                 </p>
                             </div>
@@ -175,7 +175,7 @@ const ForgotPassword = () => {
                                     type="button"
                                     onClick={resendOtpHandler}
                                     disabled={timer > 0 || loading}
-                                    className={`text-[9px] font-black uppercase tracking-widest ${timer > 0 || loading ? 'text-slate-300' : 'text-slate-900 hover:text-primary transition-colors underline decoration-slate-200 underline-offset-4'}`}
+                                    className={`text-[9px] font-black uppercase tracking-widest ${timer > 0 || loading ? 'text-slate-400' : 'text-slate-900 hover:text-primary transition-colors underline decoration-slate-300 underline-offset-4'}`}
                                 >
                                     {timer > 0 ? `Resend OTP in ${timer}s` : 'Resend OTP'}
                                 </button>
@@ -184,7 +184,7 @@ const ForgotPassword = () => {
                             <button
                                 type="button"
                                 onClick={() => setStep(1)}
-                                className="w-full text-[8px] font-black text-slate-400 hover:text-slate-900 uppercase tracking-[0.3em] transition-colors"
+                                className="w-full text-[8px] font-black text-slate-600 hover:text-slate-900 uppercase tracking-[0.3em] transition-colors"
                             >
                                 Incorrect Endpoint? Update
                             </button>
@@ -192,7 +192,7 @@ const ForgotPassword = () => {
                     )}
 
                     <div className="mt-12 pt-8 border-t border-slate-50 text-center">
-                        <Link to="/login" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors underline decoration-slate-200 underline-offset-4">
+                        <Link to="/login" className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-slate-900 transition-colors underline decoration-slate-300 underline-offset-4">
                             Return To Login
                         </Link>
                     </div>

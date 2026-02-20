@@ -183,9 +183,9 @@ const Checkout = () => {
             <div className="max-w-7xl mx-auto px-4 py-8 md:py-24">
                 <div className="mb-16">
                     <h1 className="text-4xl md:text-7xl font-bold tracking-tighter text-slate-900 mb-4">
-                        Secure <span className="text-slate-400 italic font-light">Checkout</span>
+                        Secure <span className="text-slate-700 italic font-light">Checkout</span>
                     </h1>
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-600">
                         <ShieldCheck size={14} className="text-green-600" />
                         <span>Encrypted Transaction</span>
                     </div>
@@ -248,11 +248,11 @@ const Checkout = () => {
                                     onClick={() => setPaymentMethod('QR Code')}
                                     className={`group p-8 rounded-3xl border-2 text-left transition-all ${paymentMethod === 'QR Code' ? 'bg-slate-50 border-slate-900 shadow-xl shadow-slate-900/5' : 'border-slate-100 hover:border-slate-200'}`}
                                 >
-                                    <div className={`w-10 h-10 rounded-xl mb-6 flex items-center justify-center transition-all ${paymentMethod === 'QR Code' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400'}`}>
+                                    <div className={`w-10 h-10 rounded-xl mb-6 flex items-center justify-center transition-all ${paymentMethod === 'QR Code' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-600'}`}>
                                         <Zap size={20} />
                                     </div>
                                     <h4 className="font-bold text-sm mb-2 uppercase tracking-widest text-slate-900">UPI / QR Scan</h4>
-                                    <p className="text-[10px] font-bold text-slate-400 leading-relaxed uppercase tracking-widest">Instant verification. Faster shipping.</p>
+                                    <p className="text-[10px] font-bold text-slate-600 leading-relaxed uppercase tracking-widest">Instant verification. Faster shipping.</p>
                                 </button>
 
                                 <button
@@ -260,11 +260,11 @@ const Checkout = () => {
                                     onClick={() => setPaymentMethod('Cash on Delivery')}
                                     className={`group p-8 rounded-3xl border-2 text-left transition-all ${paymentMethod === 'Cash on Delivery' ? 'bg-slate-50 border-slate-900 shadow-xl shadow-slate-900/5' : 'border-slate-100 hover:border-slate-200'}`}
                                 >
-                                    <div className={`w-10 h-10 rounded-xl mb-6 flex items-center justify-center transition-all ${paymentMethod === 'Cash on Delivery' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400'}`}>
+                                    <div className={`w-10 h-10 rounded-xl mb-6 flex items-center justify-center transition-all ${paymentMethod === 'Cash on Delivery' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-600'}`}>
                                         <Truck size={20} />
                                     </div>
                                     <h4 className="font-bold text-sm mb-2 uppercase tracking-widest text-slate-900">Cash on Delivery</h4>
-                                    <p className="text-[10px] font-bold text-slate-400 leading-relaxed uppercase tracking-widest">Pay in person. Standard fulfillment.</p>
+                                    <p className="text-[10px] font-bold text-slate-600 leading-relaxed uppercase tracking-widest">Pay in person. Standard fulfillment.</p>
                                 </button>
                             </div>
 
@@ -277,7 +277,7 @@ const Checkout = () => {
                                     <div className="max-w-[180px] mx-auto p-4 bg-white rounded-2xl mb-8 shadow-xl">
                                         <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=pixelmart0206@okaxis&pn=PixelMart&am=${totalPrice}&cu=INR`} alt="Payment QR" className="w-full h-full object-contain" />
                                     </div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-8 underline decoration-slate-200 underline-offset-8">Scan to Transfer ₹{totalPrice.toLocaleString()}</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-600 mb-8 underline decoration-slate-200 underline-offset-8">Scan to Transfer ₹{totalPrice.toLocaleString()}</p>
 
                                     <div className="space-y-4">
                                         <label className="inline-block px-10 py-4 bg-slate-900 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:bg-primary transition-all shadow-2xl shadow-slate-900/20">
@@ -310,7 +310,7 @@ const Checkout = () => {
                                             </div>
                                             <div>
                                                 <p className="text-[11px] font-bold text-slate-900 line-clamp-1 truncate w-32">{item.name}</p>
-                                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{item.qty} Unit × {item.size}</p>
+                                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">{item.qty} Unit × {item.size}</p>
                                             </div>
                                         </div>
                                         <span className="text-[11px] font-bold text-slate-900">₹{(item.price * item.qty).toLocaleString()}</span>
@@ -319,7 +319,7 @@ const Checkout = () => {
                             </div>
 
                             <div className="pt-8 border-t border-slate-100 mb-12">
-                                <div className="flex justify-between items-center text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-2">
+                                <div className="flex justify-between items-center text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-2">
                                     <span>Shipping</span>
                                     <span className="text-green-600">FREE</span>
                                 </div>
@@ -339,7 +339,7 @@ const Checkout = () => {
                             </button>
 
                             <div className="mt-10 flex flex-col items-center gap-4 opacity-50">
-                                <div className="flex gap-4 text-slate-400">
+                                <div className="flex gap-4 text-slate-600">
                                     <ShieldCheck size={16} />
                                     <Truck size={16} />
                                     <Zap size={16} />

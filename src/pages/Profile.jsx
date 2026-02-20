@@ -78,7 +78,7 @@ const Profile = () => {
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-48 animate-pulse">
       <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
-      <p className="text-sm font-black text-slate-400 uppercase tracking-widest">Loading Profile...</p>
+      <p className="text-sm font-black text-slate-600 uppercase tracking-widest">Loading Profile...</p>
     </div>
   );
 
@@ -88,9 +88,9 @@ const Profile = () => {
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
           <div className="max-w-xl">
             <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-slate-900 mb-4">
-              Your <span className="text-slate-400 italic font-light">Account</span>
+              Your <span className="text-slate-700 italic font-light">Account</span>
             </h1>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-600">
               Manage your orders and security settings
             </p>
           </div>
@@ -147,7 +147,7 @@ const Profile = () => {
 
           {orders.length === 0 ? (
             <div className="text-center py-40 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
-              <Clock size={32} className="mx-auto text-slate-300 mb-6" />
+              <Clock size={32} className="mx-auto text-slate-400 mb-6" />
               <h2 className="text-xl font-bold text-slate-900 mb-4">No acquisitions found.</h2>
               <Link to="/shop">
                 <button className="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-primary transition-all">
@@ -168,13 +168,13 @@ const Profile = () => {
                   <div className="flex flex-col lg:flex-row justify-between gap-8">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-4 mb-6">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Order #{order._id.slice(-8)}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Order #{order._id.slice(-8)}</span>
                         <span className={`px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest ${order.isDelivered ? 'bg-green-50 text-green-600' :
                           order.isPaid ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'
                           }`}>
                           {order.isDelivered ? 'Delivered' : order.isPaid ? 'In Transit' : 'Payment Pending'}
                         </span>
-                        <div className="flex items-center gap-2 text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-auto">
+                        <div className="flex items-center gap-2 text-[9px] font-bold text-slate-600 uppercase tracking-[0.2em] ml-auto">
                           <Clock size={12} />
                           <span>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                         </div>
@@ -192,7 +192,7 @@ const Profile = () => {
                             </div>
                             <div className="min-w-0">
                               <h4 className="text-xs font-bold text-slate-900 truncate">{item.name}</h4>
-                              <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-1">{item.qty} × {item.size || 'STD'}</p>
+                              <p className="text-[9px] font-semibold text-slate-600 uppercase tracking-widest mt-1">{item.qty} × {item.size || 'STD'}</p>
                             </div>
                           </div>
                         ))}
@@ -201,10 +201,10 @@ const Profile = () => {
 
                     <div className="lg:w-48 flex flex-col justify-between items-end">
                       <div className="text-right">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Value</p>
+                        <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest mb-1">Total Value</p>
                         <p className="text-2xl font-bold text-slate-900 tracking-tighter">₹{order.totalPrice.toLocaleString()}</p>
                       </div>
-                      <div className="mt-6 flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                      <div className="mt-6 flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-600">
                         {order.paymentMethod} Confirmation <CheckCircle size={12} className={order.isPaid ? 'text-green-500' : 'text-slate-200'} />
                       </div>
                     </div>

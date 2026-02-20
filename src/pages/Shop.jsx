@@ -91,14 +91,14 @@ const Shop = () => {
             className="w-full flex items-center justify-between px-6 py-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-primary transition-all group"
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-50 rounded-lg text-slate-400 group-hover:text-primary transition-colors">
+              <div className="p-2 bg-slate-50 rounded-lg text-slate-600 group-hover:text-primary transition-colors">
                 <Filter size={18} />
               </div>
               <span className="font-bold text-slate-900 tracking-tight text-sm">
                 {getCategoryName(category)}
               </span>
             </div>
-            <ChevronRight className={`transition-all duration-300 text-slate-300 ${showCategoryDropdown ? 'rotate-90' : ''}`} size={16} />
+            <ChevronRight className={`transition-all duration-300 text-slate-600 ${showCategoryDropdown ? 'rotate-90' : ''}`} size={16} />
           </button>
 
           {showCategoryDropdown && (
@@ -110,7 +110,7 @@ const Shop = () => {
                 className="absolute top-full left-0 mt-3 w-full max-h-[400px] overflow-y-auto bg-white border border-slate-100 rounded-3xl shadow-2xl p-3 space-y-1 no-scrollbar z-50"
               >
                 <div className="px-4 py-2 mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Collections</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Collections</span>
                 </div>
 
                 {categories
@@ -129,7 +129,7 @@ const Shop = () => {
                           <button
                             key={sub._id}
                             onClick={() => { updateFilters({ category: sub._id, keyword: "" }); setShowCategoryDropdown(false); }}
-                            className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all ${category === sub._id ? 'text-primary bg-primary/5' : 'text-slate-400 hover:text-primary'}`}
+                            className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all ${category === sub._id ? 'text-primary bg-primary/5' : 'text-slate-600 hover:text-primary'}`}
                           >
                             {sub.name}
                           </button>
@@ -153,7 +153,7 @@ const Shop = () => {
             <option value="price_asc text-xs">Price: Low to High</option>
             <option value="price_desc text-xs">Price: High to Low</option>
           </select>
-          <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-600">
             <ChevronRight className="rotate-90" size={16} />
           </div>
         </div>
@@ -185,7 +185,7 @@ const Shop = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
-                <span className={`text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors ${category === sub._id ? 'text-primary' : 'text-slate-400 group-hover:text-slate-900'}`}>
+                <span className={`text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors ${category === sub._id ? 'text-primary' : 'text-slate-600 group-hover:text-slate-900'}`}>
                   {sub.name}
                 </span>
               </button>
@@ -199,14 +199,14 @@ const Shop = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-48">
             <div className="w-12 h-12 border-4 border-slate-100 border-t-primary rounded-full animate-spin mb-6" />
-            <p className="text-xs font-bold text-slate-400 tracking-[0.4em] uppercase">Loading Selection</p>
+            <p className="text-xs font-bold text-slate-600 tracking-[0.4em] uppercase">Loading Selection</p>
           </div>
         ) : (
           <>
             {products.length === 0 ? (
               <div className="text-center py-32 bg-slate-50/50 rounded-[3rem] border border-slate-100">
                 <h3 className="text-3xl font-bold text-slate-900 mb-2">No items found</h3>
-                <p className="text-slate-400 font-medium mb-8">Try adjusting your filters or search terms.</p>
+                <p className="text-slate-700 font-medium mb-8">Try adjusting your filters or search terms.</p>
                 <button
                   onClick={() => updateFilters({ category: "", keyword: "" })}
                   className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-primary transition-colors"

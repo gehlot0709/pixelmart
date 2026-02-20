@@ -99,7 +99,7 @@ function App() {
         )}
       </AnimatePresence>
       {minLoadingDone && <ChatSupport />}
-      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
     </ScrollToTop>
   );
 }

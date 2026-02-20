@@ -224,7 +224,7 @@ const Navbar = memo(() => {
                 <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[10px]">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
-                <ChevronDown size={12} className={`transition-transform duration-300 text-slate-400 ${activeDropdown === 'profile' ? 'rotate-180' : ''}`} />
+                <ChevronDown size={12} className={`transition-transform duration-300 text-slate-600 ${activeDropdown === 'profile' ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -237,7 +237,7 @@ const Navbar = memo(() => {
                   >
                     <div className="px-4 py-3 mb-2 bg-slate-50 rounded-2xl">
                       <p className="text-xs font-bold text-slate-900 truncate">{user.name}</p>
-                      <p className="text-[10px] font-medium text-slate-500 truncate">{user.email}</p>
+                      <p className="text-[10px] font-medium text-slate-700 truncate">{user.email}</p>
                     </div>
                     <div className="space-y-1">
                       {user.role === 'admin' && (
@@ -257,7 +257,7 @@ const Navbar = memo(() => {
               </AnimatePresence>
             </div>
           ) : (
-            <Link to="/login" className="hidden lg:block text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-colors">
+            <Link to="/login" className="hidden lg:block text-[10px] font-bold uppercase tracking-widest text-slate-700 hover:text-slate-900 transition-colors">
               Sign In
             </Link>
           )}
@@ -306,7 +306,7 @@ const Navbar = memo(() => {
                           key={cat._id}
                           to={`/shop?category=${cat._id}`}
                           onClick={() => setIsOpen(false)}
-                          className="text-2xl font-bold text-slate-400 hover:text-slate-900"
+                          className="text-2xl font-bold text-slate-600 hover:text-slate-900"
                         >
                           {cat.name}
                         </Link>
@@ -363,7 +363,7 @@ const Navbar = memo(() => {
                 <Link to="/" className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold">P</Link>
                 <span className="font-bold text-slate-900 uppercase tracking-widest text-xs">Modern E-Commerce</span>
               </div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400">PixelMart &copy; MMXXVI</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-600">PixelMart &copy; MMXXVI</p>
             </div>
           </motion.div>
         )}
@@ -381,7 +381,7 @@ const Navbar = memo(() => {
           >
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
               <div className="flex items-center gap-6">
-                <Search size={24} className="text-slate-400 shrink-0" />
+                <Search size={24} className="text-slate-600 shrink-0" />
                 <input
                   autoFocus
                   type="text"
@@ -389,11 +389,11 @@ const Navbar = memo(() => {
                   onChange={(e) => setNavSearch(e.target.value)}
                   onKeyDown={handleSearchSubmit}
                   placeholder="Tell us what you're looking for..."
-                  className="w-full bg-transparent border-none outline-none text-2xl font-bold tracking-tighter text-slate-900 placeholder:text-slate-300"
+                  className="w-full bg-transparent border-none outline-none text-2xl font-bold tracking-tighter text-slate-900 placeholder:text-slate-400"
                 />
                 <button
                   onClick={() => setShowSearch(false)}
-                  className="p-3 text-slate-400 hover:text-primary transition-premium"
+                  className="p-3 text-slate-600 hover:text-primary transition-premium"
                 >
                   <X size={24} />
                 </button>
