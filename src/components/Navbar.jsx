@@ -10,7 +10,9 @@ import {
   LayoutDashboard,
   Search,
   Zap,
-  ArrowRight
+  ArrowRight,
+  Home,
+  Grid
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from "react";
@@ -114,26 +116,37 @@ const Navbar = memo(() => {
     }
   }, [navSearch, navigate]);
 
+  // Handle body scroll locking
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   return (
     <nav
       ref={navRef}
-      className={`fixed w-full z-50 transition-all duration-500 top-0 start-0 ${scrolled ? "py-3 bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-100" : "py-5 bg-white shadow-none"
-        }`}
+      className={`fixed w-full z-50 transition-all duration-300 top-0 start-0 ${scrolled ? "h-16 bg-white shadow-md" : "h-20 bg-white shadow-none"
+        } flex items-center shadow-sm`}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="relative z-50 group flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-glow-primary group-hover:rotate-12 transition-transform duration-300">
+        <Link to="/" className="relative z-[60] group flex items-center gap-2">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-black rounded-lg flex items-center justify-center text-white font-bold text-xl transition-transform group-hover:scale-105">
             P
           </div>
-          <span className="text-xl md:text-2xl font-bold tracking-tighter text-slate-900 leading-none group-hover:text-primary transition-colors">
+          <span className="text-xl md:text-2xl font-bold tracking-tighter text-black leading-none group-hover:text-primary transition-colors">
             PixelMart<span className="text-secondary">.</span>
           </span>
         </Link>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-10">
-
           <div className="relative group/nav">
             <button
               onMouseEnter={(e) => {
@@ -197,17 +210,19 @@ const Navbar = memo(() => {
           </Link>
         </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-2 md:gap-4 relative z-50">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-1 sm:gap-3 relative z-[60]">
+          {/* Search Icon - Mobile & Desktop */}
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className={`p-2.5 rounded-full transition-all ${showSearch ? 'bg-slate-900 text-white' : 'hover:bg-slate-50 text-slate-600'}`}
+            className={`p-2 rounded-full transition-colors ${showSearch ? 'bg-black text-white' : 'hover:bg-slate-100 text-slate-600'}`}
           >
-            {showSearch ? <X size={18} /> : <Search size={18} />}
+            {showSearch ? <X size={20} /> : <Search size={20} />}
           </button>
 
-          <Link to="/cart" className="relative p-2.5 rounded-full hover:bg-slate-50 text-slate-600 transition-all group">
-            <ShoppingCart size={18} className="group-hover:text-primary" />
+          {/* Cart Icon - Mobile & Desktop */}
+          <Link to="/cart" className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition-colors group">
+            <ShoppingCart size={20} className="group-hover:text-black" />
             {cartItems.length > 0 && (
               <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-secondary text-[8px] font-bold text-white shadow-sm ring-2 ring-white">
                 {cartItems.length}
@@ -215,13 +230,14 @@ const Navbar = memo(() => {
             )}
           </Link>
 
+          {/* Profile Dropdown (Desktop Only) */}
           {user ? (
-            <div className="relative">
+            <div className="hidden lg:block relative">
               <button
                 onClick={() => toggleDropdown('profile')}
                 className="flex items-center gap-2 p-1 pl-1 pr-3 rounded-full bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all"
               >
-                <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[10px]">
+                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px]">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <ChevronDown size={12} className={`transition-transform duration-300 text-slate-600 ${activeDropdown === 'profile' ? 'rotate-180' : ''}`} />
@@ -257,145 +273,161 @@ const Navbar = memo(() => {
               </AnimatePresence>
             </div>
           ) : (
-            <Link to="/login" className="hidden lg:block text-[10px] font-bold uppercase tracking-widest text-slate-700 hover:text-slate-900 transition-colors">
+            <Link to="/login" className="hidden lg:block text-[10px] font-bold uppercase tracking-widest text-slate-700 hover:text-black transition-colors">
               Sign In
             </Link>
           )}
 
+          {/* Hamburger Menu (Mobile Only) */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2.5 rounded-full bg-slate-900 text-white hover:bg-primary transition-colors shadow-lg shadow-black/10"
+            className="lg:hidden p-2 rounded-full text-black hover:bg-slate-100 transition-colors"
           >
             <AnimatePresence mode="wait">
-              {isOpen ? <X size={20} key="close" /> : <Menu size={20} key="open" />}
+              {isOpen ? <X size={24} key="close" /> : <Menu size={24} key="open" />}
             </AnimatePresence>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu - Premium Full Screen */}
+      {/* Mobile Menu Drawer - Full Height (100vh) */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="lg:hidden fixed inset-0 w-full bg-white z-[40] overflow-hidden flex flex-col"
-          >
-            <div className="p-8 pt-28 flex flex-col gap-6 flex-1 overflow-y-auto">
-
-              {/* Shop Accordion */}
-              <div>
-                <button
-                  onClick={() => setExpandedCategory(expandedCategory === 'shop' ? null : 'shop')}
-                  className="w-full text-left text-5xl font-bold tracking-tight text-slate-900 flex items-center justify-between py-2"
-                >
-                  Shop <ChevronDown size={32} className={`transition-transform duration-300 ${expandedCategory === 'shop' ? 'rotate-180' : ''}`} />
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/60 z-[90]"
+            />
+            {/* Drawer Content */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="lg:hidden fixed top-0 right-0 h-full w-[300px] bg-white z-[100] shadow-2xl flex flex-col"
+            >
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between p-6 border-b border-slate-100">
+                <span className="text-xl font-bold tracking-tighter">Menu</span>
+                <button onClick={() => setIsOpen(false)} title="Close Menu" className="p-2 rounded-full bg-slate-100 text-black">
+                  <X size={20} />
                 </button>
-                <AnimatePresence>
-                  {expandedCategory === 'shop' && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="flex flex-col gap-4 pl-4 pt-4 border-l-2 border-slate-100"
-                    >
+              </div>
+
+              {/* Drawer Body - Scrollable Links */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden p-6">
+                <div className="space-y-8">
+                  {/* Primary Nav */}
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Navigation</p>
+                    <div className="flex flex-col gap-4">
+                      <Link to="/" onClick={() => setIsOpen(false)} className="text-xl font-bold text-black border-b border-transparent hover:border-black pb-1 transition-all flex items-center gap-3">
+                        <Home size={20} /> Home
+                      </Link>
+                      <Link to="/offers" onClick={() => setIsOpen(false)} className="text-xl font-bold text-black border-b border-transparent hover:border-black pb-1 transition-all flex items-center gap-3">
+                        <Sparkles size={20} className="text-amber-500" /> Offers
+                      </Link>
+                      <Link to="/contact" onClick={() => setIsOpen(false)} className="text-xl font-bold text-black border-b border-transparent hover:border-black pb-1 transition-all flex items-center gap-3">
+                        <Zap size={20} className="text-primary" /> Support
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Categories */}
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Shop By Category</p>
+                    <div className="flex flex-col gap-4">
                       {categories.filter(c => !c.parent).map(cat => (
                         <Link
                           key={cat._id}
                           to={`/shop?category=${cat._id}`}
                           onClick={() => setIsOpen(false)}
-                          className="text-2xl font-bold text-slate-600 hover:text-slate-900"
+                          className="text-lg font-bold text-slate-700 hover:text-black transition-colors flex items-center justify-between"
                         >
-                          {cat.name}
+                          {cat.name} <ChevronRight size={16} className="text-slate-300" />
                         </Link>
                       ))}
                       <Link
                         to="/shop"
                         onClick={() => setIsOpen(false)}
-                        className="text-2xl font-bold text-primary"
+                        className="text-lg font-bold text-primary hover:opacity-80 transition-opacity flex items-center gap-2"
                       >
-                        All Products
+                        <Grid size={18} /> View All Products
                       </Link>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                    </div>
+                  </div>
 
-              {/* Offers */}
-              <Link
-                to="/offers"
-                onClick={() => setIsOpen(false)}
-                className="text-5xl font-bold tracking-tight text-slate-900 flex items-center gap-4 hover:text-primary transition-colors py-2"
-              >
-                Offers <Sparkles size={32} className="text-amber-400" />
-              </Link>
-
-              {/* Support */}
-              <Link
-                to="/contact"
-                onClick={() => setIsOpen(false)}
-                className="text-5xl font-bold tracking-tight text-slate-900 hover:text-primary transition-colors py-2"
-              >
-                Contact
-              </Link>
-
-              {/* Auth for Mobile */}
-              {!user && (
-                <div className="flex flex-col gap-4 pt-8">
-                  <Link to="/login" onClick={() => setIsOpen(false)}>
-                    <button className="w-full py-5 border-2 border-slate-900 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm text-slate-900 hover:bg-slate-50 transition-colors">
-                      Login
-                    </button>
-                  </Link>
-                  <Link to="/register" onClick={() => setIsOpen(false)}>
-                    <button className="w-full py-5 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-sm shadow-xl hover:bg-primary transition-colors">
-                      Join PixelMart
-                    </button>
-                  </Link>
+                  {/* Auth / Account */}
+                  <div className="space-y-4 pt-4 border-t border-slate-50">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Account</p>
+                    {user ? (
+                      <div className="space-y-3">
+                        <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 text-lg font-bold text-black">
+                          <User size={20} /> My Profile
+                        </Link>
+                        {user.role === 'admin' && (
+                          <Link to="/admin/dashboard" onClick={() => setIsOpen(false)} className="flex items-center gap-3 text-lg font-bold text-black">
+                            <LayoutDashboard size={20} /> Admin Panel
+                          </Link>
+                        )}
+                        <button onClick={() => { logout(); setIsOpen(false); }} className="flex items-center gap-3 text-lg font-bold text-red-500 w-full text-left">
+                          <LogOut size={20} /> Log Out
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4 pt-2">
+                        <Link to="/login" onClick={() => setIsOpen(false)} className="block w-full text-center py-4 rounded-xl border-2 border-black font-bold text-sm">
+                          Sign In
+                        </Link>
+                        <Link to="/register" onClick={() => setIsOpen(false)} className="block w-full text-center py-4 rounded-xl bg-black text-white font-bold text-sm shadow-xl shadow-black/10">
+                          Create Account
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-
-            <div className="p-10 border-t border-slate-50 bg-slate-50/50">
-              <div className="flex items-center gap-4 mb-6">
-                <Link to="/" className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold">P</Link>
-                <span className="font-bold text-slate-900 uppercase tracking-widest text-xs">Modern E-Commerce</span>
               </div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-600">PixelMart &copy; MMXXVI</p>
-            </div>
-          </motion.div>
+
+              {/* Drawer Footer */}
+              <div className="p-6 bg-slate-50 border-t border-slate-100">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">PixelMart &copy; 2026</p>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
-      {/* Full Width White Search Bar */}
+      {/* Full Width White Search Bar Overlay */}
       <AnimatePresence>
         {showSearch && (
           <motion.div
-            initial={{ height: 0, opacity: 0, y: -20 }}
-            animate={{ height: "auto", opacity: 1, y: 0 }}
-            exit={{ height: 0, opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl overflow-hidden"
+            className="absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-2xl z-[80] overflow-hidden"
           >
-            <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
-              <div className="flex items-center gap-6">
-                <Search size={24} className="text-slate-600 shrink-0" />
+            <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 sm:py-6">
+              <div className="flex items-center gap-4 sm:gap-6">
+                <Search size={20} className="text-slate-400 shrink-0" />
                 <input
                   autoFocus
                   type="text"
                   value={navSearch}
                   onChange={(e) => setNavSearch(e.target.value)}
                   onKeyDown={handleSearchSubmit}
-                  placeholder="Tell us what you're looking for..."
-                  className="w-full bg-transparent border-none outline-none text-2xl font-bold tracking-tighter text-slate-900 placeholder:text-slate-400"
+                  placeholder="Looking for something specific?"
+                  className="w-full bg-transparent border-none outline-none text-lg sm:text-2xl font-bold tracking-tight text-black placeholder:text-slate-300"
                 />
                 <button
                   onClick={() => setShowSearch(false)}
-                  className="p-3 text-slate-600 hover:text-primary transition-premium"
+                  className="p-2 text-slate-400 hover:text-black transition-colors"
                 >
-                  <X size={24} />
+                  <X size={20} />
                 </button>
               </div>
             </div>
