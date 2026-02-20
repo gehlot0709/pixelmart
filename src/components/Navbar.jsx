@@ -13,7 +13,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo, useMemo, useCallback } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -24,7 +24,7 @@ import API_URL from "../config";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const Navbar = () => {
+const Navbar = memo(() => {
   const { user, logout } = useAuth();
   const { cart } = useCart();
   const { cartItems } = cart;
@@ -43,7 +43,7 @@ const Navbar = () => {
 
   const { contextSafe } = useGSAP({ scope: navRef });
 
-  const onLinkEnter = contextSafe((e) => {
+  const onLinkEnter = useCallback(contextSafe((e) => {
     gsap.to(e.currentTarget, {
       x: 5,
       y: -2,
@@ -51,9 +51,9 @@ const Navbar = () => {
       ease: "power2.out",
       color: "#6366f1" // primary color
     });
-  });
+  }), [contextSafe]);
 
-  const onLinkLeave = contextSafe((e) => {
+  const onLinkLeave = useCallback(contextSafe((e) => {
     gsap.to(e.currentTarget, {
       x: 0,
       y: 0,
@@ -61,7 +61,7 @@ const Navbar = () => {
       ease: "power2.inOut",
       color: "" // revert to css
     });
-  });
+  }), [contextSafe]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -99,45 +99,40 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const toggleDropdown = (name) => setActiveDropdown(activeDropdown === name ? null : name);
+  const toggleDropdown = useCallback((name) => setActiveDropdown(prev => prev === name ? null : name), []);
 
-  const isActive = (path) => {
+  const isActive = useCallback((path) => {
     const active = path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
-    return active ? "text-primary font-black scale-105" : "text-slate-600 dark:text-slate-300 hover:text-primary";
-  };
+    return active ? "text-primary font-bold scale-105" : "text-slate-600 hover:text-primary";
+  }, [location.pathname]);
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = useCallback((e) => {
     if ((e.key === 'Enter' || e.type === 'click') && navSearch.trim()) {
       navigate(`/shop?keyword=${navSearch}`);
       setShowSearch(false);
       setNavSearch("");
     }
-  };
+  }, [navSearch, navigate]);
 
   return (
     <nav
       ref={navRef}
-      className={`fixed w-full z-50 transition-premium duration-500 top-0 start-0 ${scrolled ? "py-2 glass-dark shadow-2xl" : "py-4 bg-transparent"
+      className={`fixed w-full z-50 transition-all duration-500 top-0 start-0 ${scrolled ? "py-3 bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-100" : "py-5 bg-white shadow-none"
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="relative z-10 group">
-          <span className="text-2xl md:text-3xl font-black tracking-tighter text-gradient leading-none group-hover:opacity-80 transition-premium">
-            PixelMart<span className="text-secondary text-4xl leading-[0]">.</span>
+        <Link to="/" className="relative z-50 group flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-glow-primary group-hover:rotate-12 transition-transform duration-300">
+            P
+          </div>
+          <span className="text-xl md:text-2xl font-bold tracking-tighter text-slate-900 leading-none group-hover:text-primary transition-colors">
+            PixelMart<span className="text-secondary">.</span>
           </span>
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-12">
-          <Link
-            to="/"
-            onMouseEnter={onLinkEnter}
-            onMouseLeave={onLinkLeave}
-            className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/")}`}
-          >
-            Home
-          </Link>
+        <div className="hidden lg:flex items-center gap-10">
 
           <div className="relative group/nav">
             <button
@@ -146,42 +141,39 @@ const Navbar = () => {
                 onLinkEnter(e);
               }}
               onMouseLeave={onLinkLeave}
-              className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/shop")}`}
+              className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition-premium ${isActive("/shop")}`}
             >
-              Shop <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'shop' ? 'rotate-180' : ''}`} />
+              Shop <ChevronDown size={12} className={`transition-transform duration-300 ${activeDropdown === 'shop' ? 'rotate-180' : ''}`} />
             </button>
-            {/* Simple Shop Dropdown - Mockup Match */}
+
             <AnimatePresence>
               {activeDropdown === 'shop' && (
                 <motion.div
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
                   onMouseLeave={() => setActiveDropdown(null)}
-                  className="absolute top-full left-0 mt-4 w-72 bg-slate-950 border border-white/10 rounded-[2rem] p-6 shadow-2xl z-50 overflow-hidden"
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 bg-white border border-slate-100 rounded-3xl p-4 shadow-2xl z-50 overflow-hidden"
                 >
-                  <ul className="space-y-4">
+                  <div className="grid grid-cols-1 gap-1">
                     {categories.filter(c => !c.parent).map(parent => (
-                      <li key={parent._id}>
-                        <Link
-                          to={`/shop?category=${parent._id}`}
-                          className="flex items-center justify-between text-white hover:text-primary transition-premium group"
-                        >
-                          <span className="text-lg font-black tracking-tight">{parent.name}</span>
-                        </Link>
-                      </li>
+                      <Link
+                        key={parent._id}
+                        to={`/shop?category=${parent._id}`}
+                        className="px-4 py-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-all font-bold text-sm"
+                      >
+                        {parent.name}
+                      </Link>
                     ))}
-                    <li className="pt-6 mt-6 border-t border-white/5">
+                    <div className="mt-2 pt-2 border-t border-slate-50">
                       <Link
                         to="/shop"
-                        className="flex items-center gap-3 text-primary font-black text-xs uppercase tracking-[0.2em] group"
+                        className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-center font-bold text-[10px] uppercase tracking-widest block hover:bg-primary transition-colors"
                       >
-                        Explore All <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                        All Items
                       </Link>
-                    </li>
-                  </ul>
-                  {/* Decorative element from mockup */}
-                  <div className="absolute -bottom-8 -right-8 w-32 h-32 border border-white/5 rounded-full pointer-events-none opacity-20" />
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -191,36 +183,33 @@ const Navbar = () => {
             to="/offers"
             onMouseEnter={onLinkEnter}
             onMouseLeave={onLinkLeave}
-            className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium flex items-center gap-2 ${isActive("/offers")}`}
+            className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-premium flex items-center gap-1.5 ${isActive("/offers")}`}
           >
-            <Sparkles size={16} className="text-amber-400" /> Exclusive Offers
+            <Sparkles size={14} className="text-amber-400" /> Offers
           </Link>
           <Link
             to="/contact"
             onMouseEnter={onLinkEnter}
             onMouseLeave={onLinkLeave}
-            className={`text-[11px] font-black uppercase tracking-[0.25em] transition-premium ${isActive("/contact")}`}
+            className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-premium ${isActive("/contact")}`}
           >
-            Support
+            Contact
           </Link>
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-3 lg:gap-5 relative z-10">
+        <div className="flex items-center gap-2 md:gap-4 relative z-50">
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className={`p-2.5 rounded-full transition-all ${showSearch ? 'bg-slate-900 text-white' : 'hover:bg-slate-50 text-slate-600'}`}
+          >
+            {showSearch ? <X size={18} /> : <Search size={18} />}
+          </button>
 
-          <div className="relative group">
-            <button
-              onClick={() => setShowSearch(!showSearch)}
-              className={`p-3 rounded-2xl transition-premium group ${showSearch ? 'bg-primary/10 text-primary' : 'hover:bg-white/5 text-slate-300'}`}
-            >
-              {showSearch ? <X size={20} /> : <Search size={20} />}
-            </button>
-          </div>
-
-          <Link to="/cart" className="relative p-3 rounded-2xl hover:bg-white/5 transition-premium group">
-            <ShoppingCart size={20} className="text-slate-300 group-hover:text-primary" />
+          <Link to="/cart" className="relative p-2.5 rounded-full hover:bg-slate-50 text-slate-600 transition-all group">
+            <ShoppingCart size={18} className="group-hover:text-primary" />
             {cartItems.length > 0 && (
-              <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[9px] font-black text-white ring-4 ring-dark animate-bounce">
+              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-secondary text-[8px] font-bold text-white shadow-sm ring-2 ring-white">
                 {cartItems.length}
               </span>
             )}
@@ -230,95 +219,79 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('profile')}
-                className="flex items-center gap-3 p-1.5 pr-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-premium border border-white/5"
+                className="flex items-center gap-2 p-1 pl-1 pr-3 rounded-full bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all"
               >
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-accent text-white flex items-center justify-center font-black text-xs shadow-lg">
+                <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[10px]">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
-                <span className="hidden md:block text-[10px] font-black uppercase tracking-widest">{user.name.split(' ')[0]}</span>
-                <ChevronDown size={12} className={`transition-transform duration-300 opacity-40 ${activeDropdown === 'profile' ? 'rotate-180' : ''}`} />
+                <ChevronDown size={12} className={`transition-transform duration-300 text-slate-400 ${activeDropdown === 'profile' ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
                 {activeDropdown === 'profile' && (
                   <motion.div
-                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 mt-4 w-64 bg-slate-950 rounded-[2rem] p-4 shadow-premium border border-white/10"
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-4 w-60 bg-white rounded-3xl p-3 shadow-2xl border border-slate-100"
                   >
-                    <div className="p-4 mb-2 border-b border-white/5">
-                      <p className="text-sm font-black text-white truncate">{user.name}</p>
-                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest truncate">{user.email}</p>
+                    <div className="px-4 py-3 mb-2 bg-slate-50 rounded-2xl">
+                      <p className="text-xs font-bold text-slate-900 truncate">{user.name}</p>
+                      <p className="text-[10px] font-medium text-slate-500 truncate">{user.email}</p>
                     </div>
-                    <ul className="space-y-1">
+                    <div className="space-y-1">
                       {user.role === 'admin' && (
-                        <li>
-                          <Link to="/admin/dashboard" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 text-slate-300 hover:text-primary font-bold text-xs transition-premium">
-                            <LayoutDashboard size={16} /> Admin Panel
-                          </Link>
-                        </li>
-                      )}
-                      <li>
-                        <Link to="/profile" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 text-slate-300 hover:text-primary font-bold text-xs transition-premium">
-                          <User size={16} /> My Profile
+                        <Link to="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-600 font-bold text-xs transition-colors">
+                          <LayoutDashboard size={14} /> Admin Dashboard
                         </Link>
-                      </li>
-                      <li>
-                        <button onClick={logout} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-red-500/10 text-red-400 font-black text-xs transition-premium">
-                          <LogOut size={16} /> Sign Out
-                        </button>
-                      </li>
-                    </ul>
+                      )}
+                      <Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-600 font-bold text-xs transition-colors">
+                        <User size={14} /> My Profile
+                      </Link>
+                      <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 font-bold text-xs transition-colors text-left">
+                        <LogOut size={14} /> Log Out
+                      </button>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
           ) : (
-            <div className="hidden lg:flex items-center gap-4">
-              <Link to="/login" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-premium">Login</Link>
-              <Link to="/register">
-                <button className="px-7 py-3.5 bg-white text-dark rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl hover:-translate-y-1 transition-premium active:scale-95">
-                  Register
-                </button>
-              </Link>
-            </div>
+            <Link to="/login" className="hidden lg:block text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-colors">
+              Sign In
+            </Link>
           )}
 
-          <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-premium">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2.5 rounded-full bg-slate-900 text-white hover:bg-primary transition-colors shadow-lg shadow-black/10"
+          >
             <AnimatePresence mode="wait">
-              {isOpen ? <X size={24} key="close" /> : <Menu size={24} key="open" />}
+              {isOpen ? <X size={20} key="close" /> : <Menu size={20} key="open" />}
             </AnimatePresence>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Redesign */}
+      {/* Mobile Menu - Premium Full Screen */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: '100vh', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden fixed inset-0 top-0 w-full bg-slate-950 z-[45] overflow-hidden flex flex-col"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="lg:hidden fixed inset-0 w-full bg-white z-[40] overflow-hidden flex flex-col"
           >
-            {/* Close Button Inside Mobile Menu */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-6 right-6 p-4 text-white hover:text-primary transition-premium z-[50]"
-            >
-              <X size={32} />
-            </button>
+            <div className="p-8 pt-28 flex flex-col gap-6 flex-1 overflow-y-auto">
 
-            <div className="p-8 pb-4 pt-24 flex flex-col gap-8 flex-1 overflow-y-auto">
-              <Link to="/" className="text-4xl font-black tracking-tighter hover:text-primary transition-premium border-b border-white/5 pb-4">Home</Link>
-
-              <div className="space-y-4">
+              {/* Shop Accordion */}
+              <div>
                 <button
                   onClick={() => setExpandedCategory(expandedCategory === 'shop' ? null : 'shop')}
-                  className="w-full text-left text-4xl font-black tracking-tighter flex items-center justify-between border-b border-white/5 pb-4"
+                  className="w-full text-left text-5xl font-bold tracking-tight text-slate-900 flex items-center justify-between py-2"
                 >
-                  Shop <ChevronDown className={`transition-transform ${expandedCategory === 'shop' ? 'rotate-180' : ''}`} />
+                  Shop <ChevronDown size={32} className={`transition-transform duration-300 ${expandedCategory === 'shop' ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {expandedCategory === 'shop' && (
@@ -326,32 +299,71 @@ const Navbar = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="grid grid-cols-1 gap-4 pl-4 overflow-hidden"
+                      className="flex flex-col gap-4 pl-4 pt-4 border-l-2 border-slate-100"
                     >
                       {categories.filter(c => !c.parent).map(cat => (
-                        <Link key={cat._id} to={`/shop?category=${cat._id}`} className="text-xl font-bold text-slate-400 hover:text-white">{cat.name}</Link>
+                        <Link
+                          key={cat._id}
+                          to={`/shop?category=${cat._id}`}
+                          onClick={() => setIsOpen(false)}
+                          className="text-2xl font-bold text-slate-400 hover:text-slate-900"
+                        >
+                          {cat.name}
+                        </Link>
                       ))}
-                      <Link to="/shop" className="text-xl font-black text-primary uppercase tracking-widest">View All</Link>
+                      <Link
+                        to="/shop"
+                        onClick={() => setIsOpen(false)}
+                        className="text-2xl font-bold text-primary"
+                      >
+                        All Products
+                      </Link>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
-              <Link to="/offers" className="text-4xl font-black tracking-tighter flex items-center gap-3 hover:text-primary transition-premium border-b border-white/5 pb-4">
+              {/* Offers */}
+              <Link
+                to="/offers"
+                onClick={() => setIsOpen(false)}
+                className="text-5xl font-bold tracking-tight text-slate-900 flex items-center gap-4 hover:text-primary transition-colors py-2"
+              >
                 Offers <Sparkles size={32} className="text-amber-400" />
               </Link>
-              <Link to="/contact" className="text-4xl font-black tracking-tighter hover:text-primary transition-premium border-b border-white/5 pb-4">Support</Link>
 
+              {/* Support */}
+              <Link
+                to="/contact"
+                onClick={() => setIsOpen(false)}
+                className="text-5xl font-bold tracking-tight text-slate-900 hover:text-primary transition-colors py-2"
+              >
+                Contact
+              </Link>
+
+              {/* Auth for Mobile */}
               {!user && (
                 <div className="flex flex-col gap-4 pt-8">
-                  <Link to="/login"><button className="w-full py-5 glass rounded-2xl font-black uppercase tracking-[0.2em] text-sm">Login</button></Link>
-                  <Link to="/register"><button className="w-full py-5 bg-white text-dark rounded-2xl font-black uppercase tracking-[0.2em] text-sm shadow-xl">Register</button></Link>
+                  <Link to="/login" onClick={() => setIsOpen(false)}>
+                    <button className="w-full py-5 border-2 border-slate-900 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm text-slate-900 hover:bg-slate-50 transition-colors">
+                      Login
+                    </button>
+                  </Link>
+                  <Link to="/register" onClick={() => setIsOpen(false)}>
+                    <button className="w-full py-5 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-sm shadow-xl hover:bg-primary transition-colors">
+                      Join PixelMart
+                    </button>
+                  </Link>
                 </div>
               )}
             </div>
 
-            <div className="p-8 border-t border-white/10 bg-white/5">
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 text-center">PixelMart Laboratory &copy; 2026</p>
+            <div className="p-10 border-t border-slate-50 bg-slate-50/50">
+              <div className="flex items-center gap-4 mb-6">
+                <Link to="/" className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold">P</Link>
+                <span className="font-bold text-slate-900 uppercase tracking-widest text-xs">Modern E-Commerce</span>
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400">PixelMart &copy; MMXXVI</p>
             </div>
           </motion.div>
         )}
@@ -377,7 +389,7 @@ const Navbar = () => {
                   onChange={(e) => setNavSearch(e.target.value)}
                   onKeyDown={handleSearchSubmit}
                   placeholder="Tell us what you're looking for..."
-                  className="w-full bg-transparent border-none outline-none text-2xl font-black tracking-tighter text-slate-900 placeholder:text-slate-300"
+                  className="w-full bg-transparent border-none outline-none text-2xl font-bold tracking-tighter text-slate-900 placeholder:text-slate-300"
                 />
                 <button
                   onClick={() => setShowSearch(false)}
@@ -392,6 +404,6 @@ const Navbar = () => {
       </AnimatePresence>
     </nav>
   );
-};
+});
 
 export default Navbar;

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { motion } from 'framer-motion';
 import { Mail, Lock } from 'lucide-react';
@@ -21,58 +22,87 @@ const Login = () => {
         setError('');
         try {
             await login(email, password);
+            toast.success('Sign in successful');
             navigate('/');
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            const msg = err.response?.data?.message || 'Verification Failed';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="bg-white min-h-[90vh] flex flex-col justify-center py-12 px-6 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-12">
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 mb-4">
+                    Welcome <span className="text-slate-400 italic font-light">Back</span>
+                </h1>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                    Access your curated collection
+                </p>
+            </div>
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md p-8 rounded-3xl glass dark:glass-dark"
+                className="sm:mx-auto sm:w-full sm:max-w-[440px]"
             >
-                <h2 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Welcome Back</h2>
-                <p className="text-center text-slate-500 dark:text-gray-400 mb-8">Login to continue shopping</p>
+                <div className="bg-white px-8 py-12 border border-slate-100 rounded-[2.5rem] shadow-2xl shadow-slate-200/50">
+                    {error && (
+                        <div className="mb-8 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-center">
+                            {error}
+                        </div>
+                    )}
 
-                {error && <div className="bg-red-100 text-red-600 p-3 rounded-lg mb-4 text-center text-sm">{error}</div>}
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        <Input
+                            label="Email Address"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder=""
+                            required
+                        />
+                        <div>
+                            <Input
+                                label="Password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder=""
+                                required
+                            />
+                            <div className="mt-4 text-right">
+                                <Link to="/forgot-password" title="Forgot Password" className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors underline decoration-slate-200 underline-offset-4">
+                                    Forgot Password?
+                                </Link>
+                            </div>
+                        </div>
 
-                <form onSubmit={handleSubmit}>
-                    <Input
-                        label="Email Address"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        icon={Mail}
-                        placeholder=""
-                        required
-                    />
-                    <Input
-                        label="Password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        icon={Lock}
-                        placeholder=""
-                        required
-                    />
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full h-14 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-slate-900/10 hover:bg-primary transition-all active:scale-95 disabled:opacity-50"
+                        >
+                            {loading ? 'Authenticating...' : 'Sign In'}
+                        </button>
+                    </form>
 
-                    <div className="flex justify-end mb-6">
-                        <Link to="/forgot-password" className="text-sm text-primary hover:underline">Forgot Password?</Link>
+                    <div className="mt-12 pt-8 border-t border-slate-50 text-center">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            New to PixelMart?{' '}
+                            <Link to="/register" className="text-slate-900 hover:text-primary underline decoration-slate-200 underline-offset-4">
+                                Create Account
+                            </Link>
+                        </p>
                     </div>
+                </div>
 
-                    <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? 'Logging in...' : 'Login'}
-                    </Button>
-                </form>
-
-                <p className="text-center mt-6 text-sm text-slate-500">
-                    Don't have an account? <a href="/register" className="text-primary font-semibold hover:underline">Register</a>
-                </p>
+                <div className="mt-10 text-center opacity-40">
+                    <span className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400">Secure Encrypted Session</span>
+                </div>
             </motion.div>
         </div>
     );

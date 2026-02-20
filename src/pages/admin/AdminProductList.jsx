@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Edit, Trash2, Plus, AlertTriangle, Search } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 import Button from '../../components/Button';
 import API_URL from '../../config';
@@ -30,9 +31,10 @@ const AdminProductList = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
             await axios.delete(`${API_URL}/api/products/${id}`, config);
+            toast.success('Product deleted successfully');
             fetchProducts();
         } catch (error) {
-            alert('Error deleting product');
+            toast.error(error.response?.data?.message || 'Error deleting product');
         }
     };
 

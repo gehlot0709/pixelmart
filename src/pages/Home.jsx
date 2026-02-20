@@ -53,31 +53,6 @@ const Home = () => {
         fetchOffers();
     }, []);
 
-    // 1. Static Entrance (Hero Text)
-    useGSAP(() => {
-        const heroElements = container.current.querySelectorAll(".hero-text");
-        if (heroElements.length === 0) return;
-
-        gsap.set(heroElements, { autoAlpha: 0 });
-        gsap.fromTo(heroElements,
-            {
-                y: 100,
-                autoAlpha: 0,
-                skewY: 7,
-                scale: 0.9
-            },
-            {
-                y: 0,
-                autoAlpha: 1,
-                skewY: 0,
-                scale: 1,
-                duration: 1.5,
-                stagger: 0.15,
-                ease: "expo.out",
-                delay: 0.5
-            }
-        );
-    }, { scope: container });
 
     // 2. Category Reveal (Dynamic)
     useGSAP(() => {
@@ -86,12 +61,14 @@ const Home = () => {
         const categoryCards = container.current.querySelectorAll(".category-card");
         if (categoryCards.length === 0) return;
 
+        const isMobile = window.innerWidth < 768;
+
         gsap.set(categoryCards, { autoAlpha: 0 });
         gsap.fromTo(categoryCards,
             {
-                scale: 0.5,
+                scale: isMobile ? 0.8 : 0.5,
                 autoAlpha: 0,
-                rotationX: -45,
+                rotationX: isMobile ? 0 : -45,
                 y: 50
             },
             {
@@ -99,7 +76,7 @@ const Home = () => {
                 autoAlpha: 1,
                 rotationX: 0,
                 y: 0,
-                duration: 1.2,
+                duration: isMobile ? 0.8 : 1.2,
                 stagger: 0.1,
                 ease: "back.out(1.2)",
                 onComplete: () => ScrollTrigger.refresh()
@@ -114,6 +91,8 @@ const Home = () => {
         const offerTargets = container.current.querySelectorAll(".offers-reveal > *");
         if (offerTargets.length === 0) return;
 
+        const isMobile = window.innerWidth < 768;
+
         gsap.fromTo(offerTargets,
             {
                 y: 50,
@@ -122,12 +101,12 @@ const Home = () => {
             {
                 scrollTrigger: {
                     trigger: ".offers-reveal",
-                    start: "top 85%",
+                    start: isMobile ? "top 95%" : "top 85%",
                     toggleActions: "play none none none"
                 },
                 y: 0,
                 autoAlpha: 1,
-                duration: 1,
+                duration: isMobile ? 0.6 : 1,
                 stagger: 0.1,
                 ease: "power4.out",
                 onComplete: () => ScrollTrigger.refresh()
@@ -136,84 +115,93 @@ const Home = () => {
     }, { scope: container, dependencies: [offerProducts] });
 
     return (
-        <div className="space-y-12 pb-12 overflow-hidden" ref={container}>
-            {/* Categories Hero Section */}
-            <section className="py-16 bg-[#0a0f1d] rounded-[3rem] text-white overflow-hidden relative mx-4 md:mx-6 shadow-2xl shadow-indigo-500/10">
-                <div className="absolute top-0 right-0 w-[40%] h-full bg-primary/10 blur-[150px] -z-1" />
-                <div className="absolute bottom-0 left-0 w-[40%] h-full bg-secondary/10 blur-[150px] -z-1" />
+        <div className="bg-white min-h-screen" ref={container}>
 
-                <div className="container mx-auto px-6 relative z-10">
+            {/* Categories Section - Clean & Modern */}
+            <section className="py-12 md:py-24 px-4 md:px-8 bg-white border-y border-slate-100">
+                <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col items-center mb-16 text-center">
-                        <span className="hero-text text-primary font-black uppercase tracking-[0.5em] text-xs mb-6">The Collection</span>
-                        <h2 className="hero-text text-5xl md:text-8xl font-black tracking-tighter leading-none mb-4">
-                            Shop By <span className="text-primary italic">Vibe</span>
+                        <span className="text-primary font-bold uppercase tracking-[0.4em] text-[10px] mb-4">Categories</span>
+                        <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-slate-900">
+                            Shop by <span className="text-slate-400">Style</span>
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-2 md:flex md:flex-wrap justify-center gap-6 md:gap-16 px-4 md:px-0">
-                        {categories.filter(c => !c.parent).length > 0 ? categories.filter(c => !c.parent).map((cat) => {
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
+                        {categories.filter(c => !c.parent).map((cat) => {
                             const categoryImages = {
                                 "Men": menImg,
                                 "Women": womenImg,
                                 "Kids": kidsImg,
                                 "Accessories": accessoriesImg
                             };
-
                             const catImg = categoryImages[cat.name];
                             if (!catImg) return null;
 
                             return (
                                 <Link to={`/shop?category=${cat._id}`} key={cat._id} className="category-card group flex flex-col items-center">
-                                    <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 rounded-full border-[4px] md:border-[6px] border-white bg-white shadow-2xl overflow-hidden group-hover:border-primary transition-premium">
-                                        <img
-                                            src={catImg}
-                                            alt={cat.name}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-premium duration-700"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-premium flex items-center justify-center">
-                                            <span className="text-white font-black uppercase tracking-widest text-[10px] md:text-sm">Explore</span>
+                                    <div className="relative aspect-square w-full rounded-full border border-slate-100 p-2 md:p-4 bg-slate-50 shadow-sm group-hover:border-primary group-hover:shadow-xl transition-all duration-500 overflow-hidden">
+                                        <div className="w-full h-full rounded-full overflow-hidden border border-slate-100 shadow-inner">
+                                            <img
+                                                src={catImg}
+                                                alt={cat.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                            />
+                                        </div>
+                                        <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-slate-100">
+                                                <ArrowRight size={16} className="text-primary" />
+                                            </div>
                                         </div>
                                     </div>
-                                    <span className="mt-4 md:mt-8 text-lg md:text-4xl font-black tracking-tight group-hover:text-primary transition-premium text-center">
+                                    <span className="mt-6 text-base md:text-xl font-bold text-slate-900 tracking-tight group-hover:text-primary transition-colors">
                                         {cat.name}
                                     </span>
                                 </Link>
                             );
-                        }) : (
-                            <div className="w-full py-20 flex justify-center animate-pulse">
-                                <p className="text-slate-400 font-bold tracking-widest uppercase italic">Loading Collections...</p>
-                            </div>
-                        )}
+                        })}
                     </div>
                 </div>
             </section>
 
-            {/* Exclusive Offers Section (Main Content) */}
+            {/* Featured Section - 2 columns on mobile */}
             {offerProducts.length > 0 && (
-                <section className="offers-reveal container mx-auto px-4 md:px-6">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6">
-                        <div className="max-w-xl">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-[0.2em] mb-4 border border-secondary/20">
-                                <Sparkles size={12} /> Special Selection
+                <section className="offers-reveal py-24 px-4 md:px-8 max-w-7xl mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
+                        <div className="max-w-2xl">
+                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/5 text-secondary text-[10px] font-bold uppercase tracking-[0.2em] mb-6 border border-secondary/10">
+                                <Sparkles size={12} /> Seasonal Drop
                             </div>
-                            <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-none mb-4">
-                                Exclusive <span className="text-gradient italic">Offers</span>
+                            <h2 className="text-4xl md:text-7xl font-bold tracking-tighter leading-[0.9] text-slate-900 mb-6">
+                                Featured <span className="italic font-light text-slate-400">Offers</span>
                             </h2>
+                            <p className="text-slate-900 font-medium md:text-lg">
+                                Don't miss out on our limited-time deals on these premium selected items.
+                            </p>
                         </div>
                         <Link to="/offers" className="w-full md:w-auto">
-                            <button className="group w-full md:w-auto flex items-center justify-center gap-3 font-black text-sm uppercase tracking-widest text-primary hover:gap-6 transition-premium bg-primary/5 px-6 py-3 rounded-full border border-primary/10">
-                                Explore All Offers <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
+                            <button className="group w-full md:w-auto flex items-center justify-center gap-3 font-bold text-[10px] uppercase tracking-widest text-slate-900 transition-all border-b-2 border-slate-900 pb-2 hover:text-primary hover:border-primary">
+                                Browse All Offers <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                             </button>
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-                        {offerProducts.map((product, idx) => (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-16">
+                        {offerProducts.map((product) => (
                             <ProductCard key={product._id} product={product} />
                         ))}
                     </div>
+
+                    <div className="flex justify-center">
+                        <Link to="/shop">
+                            <button className="px-12 py-5 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-widest text-[10px] shadow-2xl shadow-slate-900/20 hover:bg-primary transition-all active:scale-95 flex items-center gap-3">
+                                Explore All Products <ArrowRight size={16} />
+                            </button>
+                        </Link>
+                    </div>
                 </section>
             )}
+
         </div>
     );
 };

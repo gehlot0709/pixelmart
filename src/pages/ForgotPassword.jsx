@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import API_URL from '../config';
@@ -36,9 +37,10 @@ const ForgotPassword = () => {
         try {
             await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
             setStep(2);
-            setTimer(30);
+            setTimer(60);
+            toast.success('Security key dispatched to your email.');
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to send OTP');
+            toast.error(err.response?.data?.message || 'Request failed');
         } finally {
             setLoading(false);
         }
@@ -49,13 +51,12 @@ const ForgotPassword = () => {
         setError('');
         setMessage('');
         try {
-            // Re-use forgot-password endpoint as it effectively resends OTP
             await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
-            setMessage('OTP resent successfully!');
+            setMessage('New security key dispatched.');
             setTimer(30);
             setTimeout(() => setMessage(''), 3000);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to resend OTP');
+            setError(err.response?.data?.message || 'Retry Dispatch Failed');
         } finally {
             setLoading(false);
         }
@@ -64,7 +65,7 @@ const ForgotPassword = () => {
     const resetPasswordHandler = async (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            setError('Passwords do not match');
+            setError('Credential mismatch');
             return;
         }
 
@@ -76,102 +77,125 @@ const ForgotPassword = () => {
                 otp,
                 password: newPassword
             });
-            alert('Password reset successfully! Please login.');
+            toast.success('Security credentials updated successfully.');
             navigate('/login');
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to reset password');
+            setError(err.response?.data?.message || 'Verification Error');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center">
-            <div className="glass dark:glass-dark p-8 rounded-3xl w-full max-w-md">
-                <h2 className="text-3xl font-bold mb-6 text-center text-primary">
-                    {step === 1 ? 'Forgot Password' : 'Reset Password'}
-                </h2>
+        <div className="bg-white min-h-[90vh] flex flex-col justify-center py-12 px-6 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-12">
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 mb-4">
+                    Forgot <span className="text-slate-400 italic font-light">Password</span>
+                </h1>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                    {step === 1 ? 'Reset your account password' : 'OTP Verification'}
+                </p>
+            </div>
 
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                        {error}
-                    </div>
-                )}
-                {message && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-                        {message}
-                    </div>
-                )}
-
-                {step === 1 ? (
-                    <form onSubmit={requestOtpHandler} className="space-y-4">
-                        <Input
-                            label="Enter your email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            placeholder=""
-                        />
-                        <Button type="submit" className="w-full" disabled={loading}>
-                            {loading ? 'Sending OTP...' : 'Send OTP'}
-                        </Button>
-                    </form>
-                ) : (
-                    <form onSubmit={resetPasswordHandler} className="space-y-4">
-                        <div className="bg-blue-50 text-blue-700 p-3 rounded-lg text-sm mb-4">
-                            OTP sent to <strong>{email}</strong>
+            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                <div className="bg-white px-8 py-12 border border-slate-100 rounded-[2.5rem] shadow-2xl shadow-slate-200/50">
+                    {error && (
+                        <div className="mb-8 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-center">
+                            {error}
                         </div>
-                        <Input
-                            label="Enter 6-digit OTP"
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value)}
-                            required
-                            placeholder=""
-                        />
-                        <Input
-                            label="New Password"
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            required
-                            placeholder=""
-                        />
-                        <Input
-                            label="Confirm New Password"
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                            placeholder=""
-                        />
-                        <Button type="submit" className="w-full" disabled={loading}>
-                            {loading ? 'Resetting...' : 'Reset Password'}
-                        </Button>
-                        <div className="text-center mt-3">
+                    )}
+                    {message && (
+                        <div className="mb-8 p-4 bg-green-50 border border-green-100 text-green-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-center">
+                            {message}
+                        </div>
+                    )}
+
+                    {step === 1 ? (
+                        <form onSubmit={requestOtpHandler} className="space-y-8">
+                            <Input
+                                label="Your Email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                placeholder="IDENTITY@DOMAIN.COM"
+                            />
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full h-14 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-primary transition-all active:scale-95 disabled:opacity-50"
+                            >
+                                {loading ? 'Sending...' : 'Send OTP'}
+                            </button>
+                        </form>
+                    ) : (
+                        <form onSubmit={resetPasswordHandler} className="space-y-8">
+                            <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
+                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                    OTP Code sent to <span className="text-slate-900 font-black">{email}</span>
+                                </p>
+                            </div>
+
+                            <Input
+                                label="OTP Code"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value)}
+                                required
+                                placeholder=""
+                            />
+
+                            <Input
+                                label="New Password"
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                required
+                                placeholder=""
+                            />
+
+                            <Input
+                                label="Confirm New Password"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                                placeholder=""
+                            />
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full h-14 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-primary transition-all active:scale-95 disabled:opacity-50"
+                            >
+                                {loading ? 'Updating...' : 'Reset Password'}
+                            </button>
+
+                            <div className="text-center pt-4">
+                                <button
+                                    type="button"
+                                    onClick={resendOtpHandler}
+                                    disabled={timer > 0 || loading}
+                                    className={`text-[9px] font-black uppercase tracking-widest ${timer > 0 || loading ? 'text-slate-300' : 'text-slate-900 hover:text-primary transition-colors underline decoration-slate-200 underline-offset-4'}`}
+                                >
+                                    {timer > 0 ? `Resend OTP in ${timer}s` : 'Resend OTP'}
+                                </button>
+                            </div>
+
                             <button
                                 type="button"
-                                onClick={resendOtpHandler}
-                                disabled={timer > 0 || loading}
-                                className={`text-sm font-medium ${timer > 0 || loading ? 'text-slate-400 cursor-not-allowed' : 'text-primary hover:underline'}`}
+                                onClick={() => setStep(1)}
+                                className="w-full text-[8px] font-black text-slate-400 hover:text-slate-900 uppercase tracking-[0.3em] transition-colors"
                             >
-                                {timer > 0 ? `Resend OTP in ${timer}s` : 'Resend OTP'}
+                                Incorrect Endpoint? Update
                             </button>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => setStep(1)}
-                            className="w-full text-sm text-slate-500 hover:text-primary mt-2"
-                        >
-                            Change Email
-                        </button>
-                    </form>
-                )}
+                        </form>
+                    )}
 
-                <div className="mt-6 text-center">
-                    <Link to="/login" className="text-sm text-slate-500 hover:text-primary transition">
-                        Back to Login
-                    </Link>
+                    <div className="mt-12 pt-8 border-t border-slate-50 text-center">
+                        <Link to="/login" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors underline decoration-slate-200 underline-offset-4">
+                            Return To Login
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

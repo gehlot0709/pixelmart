@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import API_URL from '../../config';
@@ -47,8 +48,6 @@ const AdminProductEdit = () => {
                 if (data.length > 0 && !category && !isEdit) setCategory(data[0]._id);
             } catch (error) {
                 console.error("Failed to fetch categories:", error);
-                // Alert the user if it's an admin page so they know something is wrong
-                // alert("Failed to load categories. Check console for details."); 
             }
         };
         fetchCats();
@@ -98,7 +97,7 @@ const AdminProductEdit = () => {
         e.preventDefault();
 
         if (!isEdit && (!images || images.length === 0)) {
-            return alert("Please select at least one product image");
+            return toast.warning("Please select at least one product image");
         }
 
         setLoading(true);
@@ -135,16 +134,17 @@ const AdminProductEdit = () => {
 
             if (isEdit) {
                 await axios.put(`${API_URL}/api/products/${id}`, formData, config);
+                toast.success('Product updated successfully');
                 navigate('/admin/products');
             } else {
                 await axios.post(`${API_URL}/api/products`, formData, config);
+                toast.success('Product created successfully');
                 navigate('/admin/products');
             }
         } catch (error) {
             console.error("Save Error:", error);
             const message = error.response?.data?.message || error.message;
-            const details = error.response?.data?.errors ? `\n- ${error.response.data.errors.join('\n- ')}` : '';
-            alert(`Error Saving Product: ${message}${details}`);
+            toast.error(`Error Saving Product: ${message}`);
         } finally {
             setLoading(false);
         }

@@ -9,7 +9,7 @@ const Input = ({ label, type, name, value, onChange, placeholder, icon: Icon, re
     const isPassword = type === 'password';
     return (
         <div className="mb-4">
-            {label && <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">{label}</label>}
+            {label && <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{label}</label>}
             <div className="relative">
                 {Icon && (
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">

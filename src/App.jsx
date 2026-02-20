@@ -9,6 +9,8 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatSupport from './components/ChatSupport';
 import Preloader from './components/Preloader';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Lazy load pages
 const Home = lazy(() => import('./pages/Home'));
@@ -97,6 +99,7 @@ function App() {
         )}
       </AnimatePresence>
       {minLoadingDone && <ChatSupport />}
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
     </ScrollToTop>
   );
 }

@@ -5,8 +5,6 @@ import Footer from '../components/Footer';
 const MainLayout = () => {
     return (
         <div className="relative min-h-screen flex flex-col text-slate-800 dark:text-gray-100 overflow-hidden bg-premium-gradient">
-            {/* Background */}
-            <div className="fixed inset-0 bg-light dark:bg-dark -z-20" />
 
             <Navbar />
 

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Plus, Trash2, Tag } from 'lucide-react';
+import { toast } from 'react-toastify';
 import Button from '../../components/Button';
 import API_URL from '../../config';
 
@@ -29,9 +30,10 @@ const AdminCategoryList = () => {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
             await axios.post(`${API_URL}/api/categories`, newCategory, config);
             setNewCategory({ name: '', image: '' });
+            toast.success('Category created successfully');
             fetchCategories();
         } catch (error) {
-            alert(error.response?.data?.message || 'Error creating category');
+            toast.error(error.response?.data?.message || 'Error creating category');
         }
     };
 
@@ -40,9 +42,10 @@ const AdminCategoryList = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
             await axios.delete(`${API_URL}/api/categories/${id}`, config);
+            toast.success('Category deleted successfully');
             fetchCategories();
         } catch (error) {
-            alert(error.response?.data?.message || 'Error deleting category');
+            toast.error(error.response?.data?.message || 'Error deleting category');
         }
     };
 

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 
 import { Check, X, Eye, AlertTriangle } from 'lucide-react';
+import { toast } from 'react-toastify';
 import API_URL from '../../config';
 
 const AdminOrderList = () => {
@@ -30,9 +31,10 @@ const AdminOrderList = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
             await axios.put(`${API_URL}/api/orders/${id}/status`, { status }, config);
+            toast.success(`Order status updated to ${status}`);
             fetchOrders();
         } catch (error) {
-            alert('Error updating status');
+            toast.error('Error updating status');
         }
     };
 
@@ -41,9 +43,10 @@ const AdminOrderList = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
             await axios.put(`${API_URL}/api/orders/${id}/deliver`, {}, config);
+            toast.success('Order marked as delivered');
             fetchOrders();
         } catch (error) {
-            alert('Error');
+            toast.error('Error updating delivery status');
         }
     };
 
@@ -108,9 +111,9 @@ const AdminOrderList = () => {
                                         value={order.status}
                                         onChange={(e) => updateStatus(order._id, e.target.value)}
                                         className={`text-sm font-bold px-3 py-1 rounded-lg border-none focus:ring-0 cursor-pointer ${order.status === 'Delivered' ? 'bg-green-100 text-green-600' :
-                                                order.status === 'Cancelled' ? 'bg-red-100 text-red-600' :
-                                                    order.status === 'Paid' ? 'bg-blue-100 text-blue-600' :
-                                                        'bg-orange-100 text-orange-600'
+                                            order.status === 'Cancelled' ? 'bg-red-100 text-red-600' :
+                                                order.status === 'Paid' ? 'bg-blue-100 text-blue-600' :
+                                                    'bg-orange-100 text-orange-600'
                                             }`}
                                     >
                                         <option value="Pending">Pending</option>

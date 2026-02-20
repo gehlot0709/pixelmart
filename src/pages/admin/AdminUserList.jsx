@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { UserCheck, UserX, Search } from 'lucide-react';
+import { toast } from 'react-toastify';
 import API_URL from '../../config';
 
 const AdminUserList = () => {
@@ -27,9 +28,10 @@ const AdminUserList = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
             await axios.put(`${API_URL}/api/auth/users/${id}/status`, {}, config);
+            toast.success('Status updated successfully');
             fetchUsers();
         } catch (error) {
-            alert(error.response?.data?.message || 'Error updating status');
+            toast.error(error.response?.data?.message || 'Error updating status');
         }
     };
 

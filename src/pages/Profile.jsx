@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, CheckCircle, XCircle, Key, ArrowRight } from 'lucide-react';
 import Input from '../components/Input';
@@ -37,13 +38,15 @@ const Profile = () => {
       const config = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
       await axios.put(`${safeApiUrl}/api/auth/change-password`, { currentPassword, newPassword }, config);
       setPassMessage('Password Updated');
-      alert('Password changed successfully');
+      toast.success('Password changed successfully');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
       setShowPassForm(false);
     } catch (error) {
-      setPassError(error.response?.data?.message || 'Update failed');
+      const msg = error.response?.data?.message || 'Update failed';
+      setPassError(msg);
+      toast.error(msg);
     } finally {
       setPassLoading(false);
     }
@@ -80,132 +83,137 @@ const Profile = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 animate-fade-in">
-      <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-        <div className="max-w-xl">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
-            My <span className="text-gradient italic">Profile</span>
-          </h1>
-        </div>
-        <button
-          onClick={() => setShowPassForm(!showPassForm)}
-          className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl transition-premium hover:-translate-y-1 active:scale-95"
-        >
-          <Key size={18} /> {showPassForm ? 'Close Vault' : 'Change Password'}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {showPassForm && (
-          <motion.div
-            initial={{ opacity: 0, height: 0, y: -20 }}
-            animate={{ opacity: 1, height: 'auto', y: 0 }}
-            exit={{ opacity: 0, height: 0, y: -20 }}
-            className="glass dark:glass-dark p-10 rounded-[3rem] border border-white/20 mb-16 overflow-hidden"
+    <div className="bg-white min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-8 md:py-24">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+          <div className="max-w-xl">
+            <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-slate-900 mb-4">
+              Your <span className="text-slate-400 italic font-light">Account</span>
+            </h1>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+              Manage your orders and security settings
+            </p>
+          </div>
+          <button
+            onClick={() => setShowPassForm(!showPassForm)}
+            className="flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-slate-900/10 transition-all hover:bg-primary active:scale-95"
           >
-            <h2 className="text-2xl font-black mb-8 uppercase italic tracking-tight">Change Password</h2>
-            {passError && <p className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl mb-6 font-bold text-sm">{passError}</p>}
-            {passMessage && <p className="p-4 bg-green-500/10 border border-green-500/20 text-green-500 rounded-xl mb-6 font-bold text-sm uppercase tracking-widest">{passMessage}</p>}
-            <form onSubmit={handleChangePassword} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Input label="Current Password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
-              <Input label="New Password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
-              <Input label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-              <div className="md:col-span-3">
-                <Button type="submit" disabled={passLoading}>{passLoading ? 'Updating...' : 'Update Password'}</Button>
-              </div>
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <Key size={14} /> {showPassForm ? 'Cancel Update' : 'Change Password'}
+          </button>
+        </div>
 
-      <div className="mb-8">
-        <h2 className="text-3xl font-black tracking-tighter uppercase italic decoration-primary decoration-4 underline underline-offset-8 mb-8">Transaction History</h2>
+        <AnimatePresence>
+          {showPassForm && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100 mb-20 overflow-hidden"
+            >
+              <h2 className="text-xs font-black mb-10 uppercase tracking-[0.4em] text-slate-900">Change Password</h2>
 
-        {orders.length === 0 ? (
-          <div className="text-center py-32 glass dark:glass-dark rounded-[4rem] border-4 border-dashed border-slate-100 dark:border-slate-800">
-            <Clock size={48} className="mx-auto text-slate-200 mb-6" />
-            <h2 className="text-2xl font-black text-slate-300 uppercase tracking-widest">No Orders Found.</h2>
-            <Link to="/shop" className="text-primary font-black uppercase tracking-widest text-xs mt-4 inline-block hover:underline underline-offset-4">Browse Products →</Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {orders.map((order, idx) => (
-              <motion.div
-                key={order._id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="group glass dark:glass-dark p-8 rounded-[3rem] border border-white/20 hover:border-primary/20 transition-premium shadow-2xl shadow-slate-200/50 dark:shadow-none"
-              >
-                <div className="flex justify-between items-start mb-8 pb-8 border-b border-slate-100 dark:border-slate-800">
-                  <div>
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="px-3 py-1 bg-slate-50 dark:bg-slate-900 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 border border-slate-100 dark:border-slate-800">#{order._id.slice(-8)}</span>
-                      <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-xl ${order.isDelivered ? 'bg-green-500 text-white shadow-green-500/20' :
-                        order.isPaid ? 'bg-blue-500 text-white shadow-blue-500/20' : 'bg-amber-500 text-white shadow-amber-500/20'
-                        }`}>
-                        {order.isDelivered ? 'Delivered' : order.isPaid ? 'Processing' : 'Pending'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                      <Clock size={14} className="text-primary" />
-                      <span>{new Date(order.createdAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">₹{order.totalPrice}</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">{order.paymentMethod}</p>
-                  </div>
+              {passError && (
+                <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl mb-8 font-bold text-[10px] uppercase tracking-widest">
+                  {passError}
                 </div>
+              )}
 
-                <div className="space-y-6 mb-8 max-h-48 overflow-y-auto pr-4 no-scrollbar">
-                  {order.orderItems.map((item, index) => (
-                    <div key={index} className="flex items-center gap-6 group/item">
-                      <div className="w-16 h-16 rounded-2xl bg-white/50 p-1 flex-shrink-0 overflow-hidden">
-                        <img src={(() => {
-                          if (item.image.startsWith('http') && !item.image.includes('localhost:5000')) return item.image;
-                          let path = item.image.replace(/^http:\/\/localhost:5000/, '');
-                          path = path.replace(/^\/uploads\//, '/assets/');
-                          path = path.replace(/^\/server\/uploads\//, '/assets/');
-                          return path.startsWith('/') ? path : `${API_URL}${path}`;
-                        })()} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover/item:scale-110 transition-premium" />
+              {passMessage && (
+                <div className="p-4 bg-green-50 border border-green-100 text-green-600 rounded-xl mb-8 font-black text-[10px] uppercase tracking-widest">
+                  {passMessage}
+                </div>
+              )}
+
+              <form onSubmit={handleChangePassword} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <Input label="Current Password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
+                <Input label="New Password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+                <Input label="Confirm New Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                <div className="md:col-span-3">
+                  <button
+                    type="submit"
+                    disabled={passLoading}
+                    className="px-12 h-14 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-primary disabled:opacity-50 transition-all"
+                  >
+                    {passLoading ? 'Verifying...' : 'Update Password'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="space-y-12">
+          <h2 className="text-xs font-black uppercase tracking-[0.4em] text-slate-900 border-b border-slate-100 pb-6">Order History</h2>
+
+          {orders.length === 0 ? (
+            <div className="text-center py-40 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+              <Clock size={32} className="mx-auto text-slate-300 mb-6" />
+              <h2 className="text-xl font-bold text-slate-900 mb-4">No acquisitions found.</h2>
+              <Link to="/shop">
+                <button className="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-primary transition-all">
+                  Browse Collection
+                </button>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {orders.map((order, idx) => (
+                <motion.div
+                  key={order._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="group p-8 rounded-3xl border border-slate-100 bg-white hover:border-slate-200 transition-all hover:shadow-sm"
+                >
+                  <div className="flex flex-col lg:flex-row justify-between gap-8">
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-4 mb-6">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Order #{order._id.slice(-8)}</span>
+                        <span className={`px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest ${order.isDelivered ? 'bg-green-50 text-green-600' :
+                          order.isPaid ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'
+                          }`}>
+                          {order.isDelivered ? 'Delivered' : order.isPaid ? 'In Transit' : 'Payment Pending'}
+                        </span>
+                        <div className="flex items-center gap-2 text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-auto">
+                          <Clock size={12} />
+                          <span>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <h4 className="text-sm font-black text-slate-900 dark:text-white line-clamp-1">{item.name}</h4>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">{item.qty} Volume × {item.size || 'Unique'}</p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {order.orderItems.map((item, index) => (
+                          <div key={index} className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div className="w-16 h-16 rounded-xl bg-white p-2 overflow-hidden border border-slate-100 flex-shrink-0">
+                              <img src={(() => {
+                                if (item.image.startsWith('http') && !item.image.includes('localhost:5000')) return item.image;
+                                let path = item.image.replace(/^http:\/\/localhost:5000/, '').replace(/^\/uploads\//, '/assets/').replace(/^\/server\/uploads\//, '/assets/');
+                                return path.startsWith('/') ? path : `${API_URL}${path}`;
+                              })()} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-slate-900 truncate">{item.name}</h4>
+                              <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-1">{item.qty} × {item.size || 'STD'}</p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
 
-                <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                  <div className="flex -space-x-3 overflow-hidden">
-                    {order.orderItems.slice(0, 3).map((item, i) => (
-                      <div key={i} className="inline-block h-8 w-8 rounded-full ring-4 ring-white dark:ring-slate-900 bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                        <img src={(() => {
-                          if (item.image.startsWith('http') && !item.image.includes('localhost:5000')) return item.image;
-                          let path = item.image.replace(/^http:\/\/localhost:5000/, '');
-                          path = path.replace(/^\/uploads\//, '/assets/');
-                          path = path.replace(/^\/server\/uploads\//, '/assets/');
-                          return path.startsWith('/') ? path : `${API_URL}${path}`;
-                        })()} className="h-full w-full object-cover" alt="" />
+                    <div className="lg:w-48 flex flex-col justify-between items-end">
+                      <div className="text-right">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Value</p>
+                        <p className="text-2xl font-bold text-slate-900 tracking-tighter">₹{order.totalPrice.toLocaleString()}</p>
                       </div>
-                    ))}
-                    {order.orderItems.length > 3 && (
-                      <div className="flex items-center justify-center h-8 w-8 rounded-full ring-4 ring-white dark:ring-slate-900 bg-slate-900 dark:bg-white text-white dark:text-black text-[10px] font-black">
-                        +{order.orderItems.length - 3}
+                      <div className="mt-6 flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                        {order.paymentMethod} Confirmation <CheckCircle size={12} className={order.isPaid ? 'text-green-500' : 'text-slate-200'} />
                       </div>
-                    )}
+                    </div>
                   </div>
-                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    Finalized Transaction <CheckCircle size={14} className="text-green-500" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -3,82 +3,74 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from 'luc
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-slate-950 text-white relative overflow-hidden mt-16">
-            {/* Decorative background gradients */}
-            <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/5 blur-[120px] rounded-full" />
-            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-secondary/5 blur-[120px] rounded-full" />
-
-            <div className="container mx-auto px-6 py-12 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 lg:gap-8 mb-20">
+        <footer className="w-full bg-[#172337] text-white mt-32">
+            <div className="container mx-auto px-6 py-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
                     {/* Brand Identity */}
-                    <div className="lg:col-span-4 space-y-8">
+                    <div className="space-y-8">
                         <div>
-                            <h2 className="text-4xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-6 tracking-tighter">
-                                PixelMart
+                            <h2 className="text-2xl font-bold text-white mb-6 tracking-tighter uppercase italic">
+                                Pixel<span className="text-slate-400 font-light">Mart</span>
                             </h2>
-                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs font-medium italic opacity-80">
-                                "The intersection of cutting-edge technology and timeless elegance. We craft experiences, not just apparel."
+                            <p className="text-slate-400 text-xs leading-relaxed max-w-xs">
+                                Redefining the shopping experience with curated premium collections and exceptional service.
                             </p>
                         </div>
                         <div className="flex gap-4">
                             {[Facebook, Twitter, Instagram, Linkedin].map((Icon, idx) => (
-                                <a
-                                    key={idx}
-                                    href="#"
-                                    className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-premium hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
-                                >
-                                    <Icon size={20} />
-                                </a>
+                                <Link key={idx} to="#" className="text-slate-400 hover:text-white transition-colors duration-300">
+                                    <Icon size={18} />
+                                </Link>
                             ))}
                         </div>
                     </div>
 
-                    {/* Navigation Columns */}
-                    <div className="lg:col-span-2 space-y-8">
-                        <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Inventory</h3>
+                    {/* Navigation */}
+                    <div className="space-y-8">
+                        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500">Navigation</h3>
                         <ul className="space-y-4">
-                            {[
-                                { name: 'Man', link: '/shop?category=men' },
-                                { name: 'Woman', link: '/shop?category=women' },
-                                { name: 'Collection', link: '/shop' },
-                                { name: 'Limited Drops', link: '/offers' }
-                            ].map((item, idx) => (
-                                <li key={idx}>
-                                    <Link to={item.link} className="text-slate-400 hover:text-white transition-premium font-bold text-sm flex items-center group">
-                                        <span className="w-0 group-hover:w-4 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all" />
-                                        {item.name}
+                            {['Home', 'Shop', 'Offers', 'Contact'].map((item) => (
+                                <li key={item}>
+                                    <Link to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-slate-300 hover:text-white transition-colors text-sm">
+                                        {item}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    {/* Direct Nexus (Moved up to fill space) */}
-                    <div className="lg:col-span-4 space-y-8">
-                        <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Support Hub</h3>
-                        <div className="space-y-6">
-                            <div className="flex items-center gap-4 group">
-                                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-primary group-hover:bg-primary group-hover:text-white transition-premium">
-                                    <Mail size={20} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Email</p>
-                                    <p className="text-sm font-bold">pixelmart0206@gmail.com</p>
-                                </div>
-                            </div>
+                    {/* Services */}
+                    <div className="space-y-8">
+                        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500">Services</h3>
+                        <ul className="space-y-4">
+                            {['Privacy Policy', 'Terms of Service', 'Shipping Info', 'Returns'].map((item) => (
+                                <li key={item}>
+                                    <Link to="#" className="text-slate-300 hover:text-white transition-colors text-sm">
+                                        {item}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Support Bar Style (No Extra Content) */}
+                    <div className="space-y-8">
+                        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500">Connect</h3>
+                        <div className="flex items-center gap-4 text-slate-300">
+                            <Mail size={18} className="text-blue-400" />
+                            <span className="text-sm">Contact Support</span>
                         </div>
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">
-                        &copy; {new Date().getFullYear()} PixelMart. All Rights Reserved.
+                <div className="pt-16 mt-16 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-8">
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                        © {new Date().getFullYear()} PixelMart. All Rights Reserved
                     </p>
-                    <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
-                        <a href="#" className="hover:text-white transition-premium">Privacy Policy</a>
-                        <a href="#" className="hover:text-white transition-premium">Terms of Service</a>
-                        <a href="#" className="hover:text-white transition-premium">Returns & Refunds</a>
+                    <div className="flex gap-4 items-center opacity-30 grayscale brightness-200">
+                        {['VISA', 'MASTERCARD', 'PAYPAL', 'AMEX'].map(card => (
+                            <span key={card} className="text-[8px] font-bold tracking-tighter border border-white/50 px-1 rounded">{card}</span>
+                        ))}
                     </div>
                 </div>
             </div>
